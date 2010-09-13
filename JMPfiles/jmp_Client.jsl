@@ -1,0 +1,52 @@
+run_model = function({},
+skt = socket(STREAM);
+skt<<connect("localhost","21688");
+
+
+data_out  = in:Inputs<<GetAsMatrix;
+
+skt<<Send(ChartoBlob(Char(data_out)));
+
+wait(1);
+results = skt<<Recv(10240000);
+results = BlobtoChar(results[3]);
+
+results = parse(results);
+
+//show(results);
+
+wait(1);
+skt<<send(ChartoBlob("Q"));
+skt<<close();
+
+
+
+
+out:TC_Unloaded NN<<Set Values(results[0,1]);
+out:Travel Time<<Set Values(results[0,2]);
+out:Time in Beach Queue<<Set Values(results[0,3]);
+out:Time in Sea Base Queue<<Set Values(results[0,4]);
+out:Load and Unload Time<<Set Values(results[0,5]);
+out:LCACs Unloaded<<Set Values(results[0,6]);
+out:LCAC Time in Beach Queue<<Set Values(results[0,7]);
+out:LCAC  Time in SB Queue<<Set Values(results[0,8]);
+out:MLP SB Queue<<Set Values(results[0,9]);
+out:MLP Beach Queue<<Set Values(results[0,10]);
+out:LCAC Travel Time<<Set Values(results[0,11]);
+out:LCAC Loading Time<<Set Values(results[0,12]);
+out:MLP SB Queue 2<<Set Values(results[0,13]);
+out:MLP Beach Queue 2<<Set Values(results[0,14]);
+out:Marine<<Set Values(results[0,15]);
+out:LAV25<<Set Values(results[0,16]);
+out:M1A1<<Set Values(results[0,17]);
+out:Mimars<<Set Values(results[0,18]);
+out:MK48<<Set Values(results[0,19]);
+out:Mk23<<Set Values(results[0,20]);
+out:Pallets<<Set Values(results[0,21]);
+out:TC Avg Load Wts<<Set Values(results[0,22]);
+out:TC Avg Area<<Set Values(results[0,23]);
+out:LCAC Avg Load Wts<<Set Values(results[0,24]);
+out:LCAC Avg Area<<Set Values(results[0,25]);
+gb1<<reshow;
+gb2<<reshow;
+)

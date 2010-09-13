@@ -1,0 +1,33 @@
+s1 = socket();
+//Show Properties(s1);
+s1 << Connect("172.16.20.109","80");
+s1 << GetPeerName;
+s1 << GetSockName;
+//s1 << send(CharToBlob("GET / HTTP/1.0~0d~0a~0d~0a", "ASCII~HEX"));
+s1 << send(CharToBlob("GET /octave.php?x=200 HTTP/1.0~0d~0a~0d~0a", "ASCII~HEX"));
+//s1 << send(CharToBlob("GET /add.php?x=100000000000&y=200 HTTP/1.0~0d~0a~0d~0a", "ASCII~HEX"));
+//s1 << send(CharToBlob("GET /density.php?h=20000 HTTP/1.0~0d~0a~0d~0a", "ASCII~HEX"));
+sMessage = s1<<Recv(1000);
+//show(sMessage);
+sText = BlobToChar( sMessage[3], "ASCII~HEX" );
+//show(text); 
+
+s1 << close();
+
+myLoc1 = Contains(sText, "Content-Length:");
+myLoc2 = Contains(sText, "Connection:");
+sText2 = substr(sText,myLoc1,myLoc2 - myLoc1);
+
+sText2 = Uppercase(sText2);
+
+myLoc3 = munger(sText2,1,"~0D~0A");
+
+sText3 = substr(sText2,16,myLoc3 - 16);
+
+myLength2 = parse(sText3);
+
+myLength = length(sText);
+
+sText4 = munger(sText,myLength - myLength2 + 1,-myLength2);
+
+parse(sText4);

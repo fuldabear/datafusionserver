@@ -1,0 +1,60 @@
+
+rread = function({name},
+	{default local},
+	s1 = socket();
+	s1 << Connect("172.16.20.109","80");
+	s1 << GetPeerName;
+	s1 << GetSockName;
+
+	preamble = "GET /?mode=read&name=";
+	myOutput = "output=simple";
+	postamble = " HTTP/1.0~0d~0a~0d~0a";
+	command = preamble || name || myOutput || postamble;
+	//show(command);
+	s1 << send(CharToBlob(command, "ASCII~HEX"));
+	sMessage = s1<<Recv(1000); //bad to have a limit? lots of data, look here for an error! - JI
+	//show(sMessage);
+	sText = BlobToChar( sMessage[3], "ASCII~HEX" );
+	//show(sText); 
+
+	s1 << close();
+	
+	myLoc1 = contains(sText,"text/html~0D~0A~0D~0A");
+	sText1 = substr(sText,myLoc1+21,length(sText));
+	for(i = 1, i < 100, i++,
+		sText1 = munger(sText1,1,"~22","");
+	);
+	myLoc2 = contains(sText1,"value:");
+	myLoc3 = contains(sText1,",lastUpdated:");
+	
+	sText2 = substr(sText1,myLoc2+6,myLoc3-myLoc2-6);
+	sText2 = parse(sText2);
+	
+	sText2;
+);
+
+rread("c");
+
+rwrite = function({name,value},
+	{default local},
+	s1 = socket();
+	s1 << Connect("172.16.20.109","80");
+	s1 << GetPeerName;
+	s1 << GetSockName;
+
+	preamble = "GET /?mode=write&name=";
+	midamble = "&value=";
+	postamble = " HTTP/1.0~0d~0a~0d~0a";
+	command = preamble || char(name) || midamble || char(value) || postamble;
+	//show(command);
+	s1 << send(CharToBlob(command, "ASCII~HEX"));
+	sMessage = s1<<Recv(1000); //bad to have a limit? lots of data, look here for an error! - JI
+	//show(sMessage);
+	sText = BlobToChar( sMessage[3], "ASCII~HEX" );
+	//show(sText); 
+
+	s1 << close();
+	
+);
+
+rwrite("slider",60);

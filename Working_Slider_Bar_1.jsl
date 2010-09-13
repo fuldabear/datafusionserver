@@ -1,0 +1,43 @@
+myX = [0];
+myY = [50];
+
+nw2 = New Window( "test",
+	myVar = 0;
+	H List Box(
+		sb1 = Slider Box(
+			1,
+			100,
+			myVar,
+			iii = 1;
+			Show( myVar );
+			tb1 << set text( Char( Round( myVar ) ) );
+			rwrite( "slider", myVar );
+			myX[1] = myVar;
+		),
+		tb1 = Text Box( Char( myVar ) ),     
+		
+	);,    
+	gb1 = graphbox(
+		framesize(100,100),
+		Xscale(0,100),
+		Yscale(0,100),
+		markersize(5);
+		dragmarker(myX,myY,
+			myVar = myX[1];
+			tb1 << set text( Char( Round( myVar ) ) );
+			rwrite( "slider", myVar );
+			)
+	),
+	Button Box( "stop me", iii = 0 )
+);
+
+iii = 1;
+While( iii == 1,
+	Show( myVar );
+	myVar = rread( "slider" );
+	tb1 << set text( Char( myVar ) );
+	sb1 << reshow;
+	myX[1] = myVar;
+	gb1 << reshow;
+	Wait( .2 );
+);
