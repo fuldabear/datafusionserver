@@ -4,5 +4,14 @@
 
 		In the future this file will determine whether a web-site, wiki-site, or functions within ./bin are presented.
 	*/
-	require_once('./bin/data.php');
+
+
+	if()
+	{
+		require_once('./bin/data.php');
+	}
+	else
+	{
+		header('Location:http://wiki.fullmer.homelinux.org');
+	}
 ?>

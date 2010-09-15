@@ -1,6 +1,6 @@
 NOTES:
 
 Expand database.php to include mysqldump
-Create a octave.php
+Create a octave.php, python.php, variable.php, session.php, tag.php, function.php, time.php
 
 
