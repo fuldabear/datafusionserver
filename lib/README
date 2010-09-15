@@ -3,4 +3,4 @@ NOTES:
 Expand database.php to include mysqldump
 Create a octave.php, python.php, variable.php, session.php, tag.php, function.php, time.php
 
-
+At one point we were discusing the use of a verb 'run'. I think read will be su
