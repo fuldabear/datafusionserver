@@ -1,7 +1,8 @@
-<?php
-	ini_set(display_errors, true);
+<?php	
 	
 	header("Cache-Control: no-cache, must-revalidate");
+
+	if(isset($_GET['debug'])) if($_GET['debug'] == 'true') ini_set(display_errors, true);
 
 	//echo "in teh file";
 	
@@ -46,7 +47,7 @@
 	}
 	else{
 		$j = json_encode($o);
-		echo $j;
+		print_r($j);
 	}
 	
 	
