@@ -3,7 +3,7 @@
 	
 	header("Cache-Control: no-cache, must-revalidate");
 
-	//echo "in teh file";
+	//echo "in the file";
 	
 	require_once("lib/database.php");
 	
