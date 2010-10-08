@@ -38,7 +38,7 @@
 						$o = $ds->write();
 					} 
 					elseif($mode == "list"){
-						$o = $ds->lsvar();
+						$o = $ds->listVaraibles();
 					}
 					else{
 					$o->error = 'mode undefinded';
@@ -143,7 +143,18 @@
 			}
 			else{
 				$y = new Spyc();
-				echo $y->YAMLDump($o,4,100);
+				//bug fix
+				if(count($o) > 1)
+				{
+					for($i = 0; $i < count($o); $i++)
+					{
+						echo $y->YAMLDump($o[$i],4,100);
+					}
+				}
+				else
+				{
+					echo $y->YAMLDump($o,4,100);
+				}
 			}
 		}
 		else{
