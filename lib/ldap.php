@@ -21,7 +21,7 @@
 		
 		public function check()
 		{
-			return true; //temperary for debugging
+			return false; //temperary for debugging
 			$ds=@ldap_connect("ldap://$this->host");
 			if ($ds) {
 				if (@ldap_bind($ds,$this->bindUser,$this->bindPassword)) {

@@ -11,158 +11,163 @@
 	require_once("./lib/spyc.php");
 	
 	$db = new Database($db_hostname="localhost",$db_username="root",$db_password="doc",$db_database="mydb");
-	$ldap = new Ldap($_GET['user'],$_GET['password']);
-	$session = new Session($db, $_GET['user'],$_GET['password'], $ldap);
 	
-	$userSession = $session->check();
-	
-	if($userSession != false)
+	if(!isset($_GET['user']) && !isset($_GET['password'])) echo 'Authorization Failed';
+	else
 	{
-		if(isset($_GET['command']))
+		$ldap = new Ldap($_GET['user'],$_GET['password']);
+		$session = new Session($db, $_GET['user'],$_GET['password'], $ldap);
+	
+		$userSession = $session->check();
+	
+		if($userSession != false)
 		{
-			$c = $_GET['command'];			
+			if(isset($_GET['command']))
+			{
+				$c = $_GET['command'];			
 
-			if($c == 'datastore'){
-				if(isset($_GET['mode']))
-				{
-					$mode = $_GET['mode'];
-					$ds = new Datastore($db);
+				if($c == 'datastore'){
+					if(isset($_GET['mode']))
+					{
+						$mode = $_GET['mode'];
+						$ds = new Datastore($db);
 			
-					if($mode == "read"){
-						$ds->name = $_GET['name'];						
-						$o = $ds->read();
-					} 
-					elseif($mode == "write"){
-						$ds->name = $_GET['name'];
-						$ds->value = $_GET['value'];
-						$o = $ds->write();
-					} 
-					elseif($mode == "list"){
-						$o = $ds->listVaraibles();
+						if($mode == "read"){
+							$ds->name = $_GET['name'];						
+							$o = $ds->read();
+						} 
+						elseif($mode == "write"){
+							$ds->name = $_GET['name'];
+							$ds->value = $_GET['value'];
+							$o = $ds->write();
+						} 
+						elseif($mode == "list"){
+							$o = $ds->listVaraibles();
+						}
+						else{
+						$o->error = 'mode undefinded';
+						}
+					}else{
+						$o->error = 'mode undefinded';
 					}
-					else{
-					$o->error = 'mode undefinded';
-					}
-				}else{
-					$o->error = 'mode undefinded';
 				}
-			}
-			elseif($c == 'session'){
-				if(isset($_GET['mode']))
-				{
-					$mode = $_GET['mode'];
+				elseif($c == 'session'){
+					if(isset($_GET['mode']))
+					{
+						$mode = $_GET['mode'];
 					
-					if($mode == "create"){
-						if(isset($_GET['newname']) && isset($_GET['newpassword']) && isset($_GET['expiration']) && isset($_GET['description'])) $o = $session->createSession($_GET['newname'],$_GET['newpassword'],$_GET['expiration'],$_GET['description']);
-						else $o->error = 'newname or newpassword or expiration or description undefined';
-					} 
-					elseif($mode == "remove"){
-						$o = $session->removeSession();
-					} 
-					elseif($mode == "list"){
-						$o = $session->listSessions();
-					}
-					elseif($mode == "name"){
-						if(isset($_GET['newname'])) $o = $session->changeName($_GET['newname']);
-						else $o->error = 'newname undefined';
-					} 
-					elseif($mode == "password"){
-						if(isset($_GET['newpassword'])) $o = $session->changePassword($_GET['newpassword']);
-						else $o->error = 'newpassword undefined';
-					}
-					elseif($mode == "description"){
-						if(isset($_GET['description'])) $o = $session->changeDescription($_GET['description']);
-						else $o->error = 'description undefined';
-					} 
-					elseif($mode == "expiration"){
-						if(isset($_GET['expiration'])) $o = $session->changeExpiration($_GET['expiration']);
-						else $o->error = 'expiration undefined';
+						if($mode == "create"){
+							if(isset($_GET['newname']) && isset($_GET['newpassword']) && isset($_GET['expiration']) && isset($_GET['description'])) $o = $session->createSession($_GET['newname'],$_GET['newpassword'],$_GET['expiration'],$_GET['description']);
+							else $o->error = 'newname or newpassword or expiration or description undefined';
+						} 
+						elseif($mode == "remove"){
+							$o = $session->removeSession();
+						} 
+						elseif($mode == "list"){
+							$o = $session->listSessions();
+						}
+						elseif($mode == "name"){
+							if(isset($_GET['newname'])) $o = $session->changeName($_GET['newname']);
+							else $o->error = 'newname undefined';
+						} 
+						elseif($mode == "password"){
+							if(isset($_GET['newpassword'])) $o = $session->changePassword($_GET['newpassword']);
+							else $o->error = 'newpassword undefined';
+						}
+						elseif($mode == "description"){
+							if(isset($_GET['description'])) $o = $session->changeDescription($_GET['description']);
+							else $o->error = 'description undefined';
+						} 
+						elseif($mode == "expiration"){
+							if(isset($_GET['expiration'])) $o = $session->changeExpiration($_GET['expiration']);
+							else $o->error = 'expiration undefined';
+						}
+						else{
+							$o->error = 'mode undefinded';
+						}
 					}
 					else{
 						$o->error = 'mode undefinded';
 					}
 				}
-				else{
-					$o->error = 'mode undefinded';
-				}
-			}
-			/*elseif($c == 'tag'){
-				if(isset($_GET['mode']))
-				{
-					$mode = $_GET['mode'];
-					$t = new Tag($db);
+				/*elseif($c == 'tag'){
+					if(isset($_GET['mode']))
+					{
+						$mode = $_GET['mode'];
+						$t = new Tag($db);
 		
-					if($mode == "apply"){
-						$ds->name = $_GET['name'];						
-						$o = $ds->read();
-					} 
-					elseif($mode == "remove"){
-						$ds->name = $_GET['name'];
-						$ds->value = $_GET['value'];
-						$o = $ds->write();
-					} 
-					elseif($mode == "list"){
-						$o = $ds->lsvar();
-					}
-					elseif($mode == "create"){
-						$o = $ds->lsvar();
-					}
-					elseif($mode == "delete"){
-						$o = $ds->lsvar();
+						if($mode == "apply"){
+							$ds->name = $_GET['name'];						
+							$o = $ds->read();
+						} 
+						elseif($mode == "remove"){
+							$ds->name = $_GET['name'];
+							$ds->value = $_GET['value'];
+							$o = $ds->write();
+						} 
+						elseif($mode == "list"){
+							$o = $ds->lsvar();
+						}
+						elseif($mode == "create"){
+							$o = $ds->lsvar();
+						}
+						elseif($mode == "delete"){
+							$o = $ds->lsvar();
+						}
+						else{
+						$o->error = 'mode undefinded';
+						}
 					}
 					else{
-					$o->error = 'mode undefinded';
+						$o->error = 'mode undefinded';
 					}
-				}
+				}*/
 				else{
-					$o->error = 'mode undefinded';
+					$o->error = 'command undefinded';
 				}
-			}*/
+			}
 			else{
 				$o->error = 'command undefinded';
 			}
-		}
-		else{
-			$o->error = 'command undefinded';
-		}
-		if(isset($_GET['output'])){
-			if($_GET['output'] == "simple"){
-				$j = json_encode($o->result);
-				echo $j;
-			}
-			elseif($_GET['output'] == "value"){
-				$j = json_encode($o->result[0]['value']);
-				echo ltrim(rtrim($j,'"'),'"');
-			}
-			elseif($_GET['output'] == "php"){
-				var_dump($o);
-			}
-			elseif($_GET['output'] == "json"){
-				$j = json_encode($o);
-				echo $j;
+			if(isset($_GET['output'])){
+				if($_GET['output'] == "simple"){
+					$j = json_encode($o->result);
+					echo $j;
+				}
+				elseif($_GET['output'] == "value"){
+					$j = json_encode($o->result[0]['value']);
+					echo ltrim(rtrim($j,'"'),'"');
+				}
+				elseif($_GET['output'] == "php"){
+					var_dump($o);
+				}
+				elseif($_GET['output'] == "json"){
+					$j = json_encode($o);
+					echo $j;
+				}
+				else{
+					$y = new Spyc();
+					//bug fix
+					if(count($o) > 1)
+					{
+						for($i = 0; $i < count($o); $i++)
+						{
+							echo $y->YAMLDump($o[$i],4,100);
+						}
+					}
+					else
+					{
+						echo $y->YAMLDump($o,4,100);
+					}
+				}
 			}
 			else{
 				$y = new Spyc();
-				//bug fix
-				if(count($o) > 1)
-				{
-					for($i = 0; $i < count($o); $i++)
-					{
-						echo $y->YAMLDump($o[$i],4,100);
-					}
-				}
-				else
-				{
-					echo $y->YAMLDump($o,4,100);
-				}
+				echo $y->YAMLDump($o,4,100);
 			}
-		}
-		else{
-			$y = new Spyc();
-			echo $y->YAMLDump($o,4,100);
-		}
 		
-	}else{
-		echo 'Authorization Failed';
-	}	
+		}else{
+			echo 'Authorization Failed';
+		}
+	}
 ?>

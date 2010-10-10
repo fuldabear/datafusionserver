@@ -12,24 +12,11 @@
 			$this->value = $v;
 			if($d == null) $this->db = new Datastore;
 			else $this->db = $d;
-		}
-		
-		public function writeValue($n=null,$v=null){
-			if($n == null) $n = $this->name;
-			if($v == null) $v = $this->value;
-			
-			$unique = $this->db->sqlQuery("select name from variable where name='$n'");
-			if ($unique->numOfRows!=0){ //update existing variable
-				$query="update variable set value='$v' where name='$n'";
-				$result=$this->db->sqlQuery($query);
-			}else { //make new variable
-				$result=$this->db->sqlQuery("insert variable set name='$n', value='$v'");
-			}
-			return $result;
-		}
-	
+		}	
 	
 		public function read($n=null, $v=null, $longPoll=true){
+		
+			//check links to sessions
 			if($n == null) $n = $this->name;
 			if($v == null) $v = $this->value;
 			
@@ -51,14 +38,10 @@
 			$unique = $this->db->sqlQuery("select name, value, lastUpdated, description, units from variable where name='$this->name'");
 			return $unique;
 		}
-	
-		public function listVaraibles(){
-			$unique = $this->db->sqlQuery("select name, value, lastUpdated, description, units from variable");		
-			return $unique;
-		}
 		
 		public function write()
 		{
+			
 			$n = json_decode($this->name);
 			$v = json_decode($this->value);
 			if($n == null)
@@ -81,6 +64,38 @@
 			return $results;
 		}
 		
+		public function rw()
+		{
 		
+		}
+		
+		public function link2session()
+		{
+		
+		}
+	
+		public function listVaraibles(){
+			// enforce links to sessions
+			$unique = $this->db->sqlQuery("select name, value, lastUpdated, description, units from variable");		
+			return $unique;
+		}
+		
+		public function writeValue($n=null,$v=null){
+			//create links to sessions
+			
+			if($n == null) $n = $this->name;
+			if($v == null) $v = $this->value;
+			
+			$t = time();
+			
+			$unique = $this->db->sqlQuery("select name from variable where name='$n'");
+			if ($unique->numOfRows!=0){ //update existing variable
+				$query="update variable set value='$v', lastUpdated='$t' where name='$n'";
+				$result=$this->db->sqlQuery($query);
+			}else { //make new variable
+				$result=$this->db->sqlQuery("insert variable set name='$n', value='$v', lastUpdated='$t'");
+			}
+			return $result;
+		}
 	}
 ?>

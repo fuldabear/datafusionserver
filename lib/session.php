@@ -55,6 +55,7 @@
 		
 		public function removeSession()
 		{
+			// need to add code for the removal of items exclusivly assoicated with this session
 			$results = $this->database->sqlQuery("delete from session where name='$this->name' and password='$this->password'");
 			return $results;
 		}
