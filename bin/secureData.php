@@ -152,18 +152,18 @@
 					{
 						for($i = 0; $i < count($o); $i++)
 						{
-							echo $y->YAMLDump($o[$i],4,100);
+							echo $y->YAMLDump($o[$i],4,400);
 						}
 					}
 					else
 					{
-						echo $y->YAMLDump($o,4,100);
+						echo $y->YAMLDump($o,4,400);
 					}
 				}
 			}
 			else{
 				$y = new Spyc();
-				echo $y->YAMLDump($o,4,100);
+				echo $y->YAMLDump($o,4,400);
 			}
 		
 		}else{
