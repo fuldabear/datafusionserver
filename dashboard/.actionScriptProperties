@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<actionScriptProperties analytics="false" mainApplicationPath="dashboard.mxml" projectUUID="630b65bb-4b3c-4b01-81ca-b961814fba87" version="6">
+  <compiler additionalCompilerArguments="-locale en_US" autoRSLOrdering="true" copyDependentFiles="true" fteInMXComponents="false" generateAccessible="false" htmlExpressInstall="true" htmlGenerate="true" htmlHistoryManagement="true" htmlPlayerVersionCheck="true" includeNetmonSwc="false" outputFolderPath="bin-debug" sourceFolderPath="src" strict="true" targetPlayerVersion="0.0.0" useApolloConfig="false" useDebugRSLSwfs="true" verifyDigests="true" warn="true">
+    <compilerSourcePath/>
+    <libraryPath defaultLinkType="1">
+      <libraryPathEntry kind="4" path=""/>
+      <libraryPathEntry kind="1" linkType="1" path="libs"/>
+      <libraryPathEntry kind="3" linkType="1" path="libs/flexmdi.swc" sourcepath="${DOCUMENTS}/flexmdi-1.1/src" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="1" path="C:/Users/david/Documents/synchronous/hmi/Flex Project/AS3YAML_041.swc" useDefaultLinkType="false"/>
+    </libraryPath>
+    <sourceAttachmentPath>
+      <sourceAttachmentPathEntry kind="3" linkType="1" path="libs/flexmdi.swc" sourcepath="${DOCUMENTS}/flexmdi-1.1/src" useDefaultLinkType="false"/>
+    </sourceAttachmentPath>
+  </compiler>
+  <theme themeIsDefault="false" themeIsSDK="true" themeLocation="${SDK_THEMES_DIR}/samples/themes/graphite"/>
+  <applications>
+    <application path="dashboard.mxml"/>
+  </applications>
+  <modules>
+    <module application="src/dashboard.mxml" destPath="cwrsad/cwrsad.swf" optimize="true" sourcePath="src/cwrsad/cwrsad.mxml"/>
+    <module application="src/dashboard.mxml" destPath="dashboardManager/manDash.swf" optimize="true" sourcePath="src/dashboardManager/manDash.mxml"/>
+    <module application="src/dashboard.mxml" destPath="relationBrowser/cia.swf" optimize="true" sourcePath="src/relationBrowser/cia.mxml"/>
+    <module application="src/dashboard.mxml" destPath="xmlRunner/xmlRun.swf" optimize="true" sourcePath="src/xmlRunner/xmlRun.mxml"/>
+    <module application="src/dashboard.mxml" destPath="dashBuilder/dashBuilder.swf" optimize="true" sourcePath="src/dashBuilder/dashBuilder.mxml"/>
+    <module application="src/dashboard.mxml" destPath="genericDash/genericDash.swf" optimize="true" sourcePath="src/genericDash/genericDash.mxml"/>
+    <module application="src/dashboard.mxml" destPath="manUsers/manUsers.swf" optimize="true" sourcePath="src/manUsers/manUsers.mxml"/>
+    <module application="src/dashboard.mxml" destPath="whoAmI/whoAmI.swf" optimize="true" sourcePath="src/whoAmI/whoAmI.mxml"/>
+    <module application="src/dashboard.mxml" destPath="clusterManager/clusterManager.swf" optimize="true" sourcePath="src/clusterManager/clusterManager.mxml"/>
+    <module application="src/dashboard.mxml" destPath="databaseManger/databaseManager.swf" optimize="true" sourcePath="src/databaseManger/databaseManager.mxml"/>
+    <module application="src/dashboard.mxml" destPath="dataManager/dataManager.swf" optimize="true" sourcePath="src/dataManager/dataManager.mxml"/>
+    <module application="src/dashboard.mxml" destPath="logout/logout.swf" optimize="true" sourcePath="src/logout/logout.mxml"/>
+    <module application="src/dashboard.mxml" destPath="simulationManager/simulationManager.swf" optimize="true" sourcePath="src/simulationManager/simulationManager.mxml"/>
+  </modules>
+  <buildCSSFiles/>
+</actionScriptProperties>

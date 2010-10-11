@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:classes="classes.*" layout="absolute" width="100%" height="100%" currentState="configureDash" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+	<mx:Script source="cwrsad.as"/>
+	<mx:Script>
+        <![CDATA[
+            // You need to import easing classes even if 
+            // you're going to use them only in MXML.
+            import mx.effects.easing.Bounce;
+        ]]>
+
+    </mx:Script>
+
+	<mx:states>
+		<mx:State name="configureDash">
+			<mx:SetStyle target="{hbox1}" name="horizontalAlign" value="left"/>
+			<mx:SetStyle target="{hbox1}" name="verticalAlign" value="middle"/>
+			<mx:SetEventHandler target="{liveButton}" name="click" handler="dispatchEvent(new Event(&quot;closer&quot;));"/>
+			<mx:AddChild relativeTo="{hbox1}" position="lastChild">
+				<mx:VBox width="310" height="100%" verticalAlign="middle">
+					<mx:Panel id="configurePanel" width="300" height="99%" layout="absolute" horizontalAlign="center" verticalAlign="middle" borderColor="#686666" title="Dashboard Editor Panel" color="#FFFFFF" horizontalScrollPolicy="off">
+						<mx:Accordion top="0" left="0" right="0" bottom="0" color="#5D4D4D" id="editorPanelTabs">
+							<mx:Canvas label="Simulations" width="100%" height="100%">
+								<mx:VBox color="#0B333C" left="5" right="16" top="5" bottom="5" horizontalAlign="center" paddingBottom="20">
+							<mx:TextArea id="instrutionBox1" wordWrap="true" editable="false" width="240" fontWeight="bold" textAlign="left" height="34">
+								<mx:text><![CDATA[Choose a simulation to act as  a data provider for this dashboard]]></mx:text>
+							</mx:TextArea>
+							<mx:Label text="Available Simulations:" fontStyle="italic" width="240"/>
+							<mx:DataGrid width="240" id="simulationsTable" dataProvider="{this.simulationTableDataProvider.rootItem}" showHeaders="false" change="selectSimulation(event)" height="142"/>
+							<mx:Grid>
+								<mx:GridRow width="100%" height="100%">
+									<mx:GridItem width="240" height="100%">
+										<mx:Button label="New" click="simulationNewButton()"/>
+										<mx:Button label="Duplicate" click="simulationDuplicateButton()"/>
+										<mx:Spacer width="12"/>
+										<mx:Button label="Remove" click="simulationRemoveButton()"/>
+									</mx:GridItem>
+								</mx:GridRow>
+							</mx:Grid>
+							<mx:Label text="Simulation Id:" fontStyle="italic" width="240"/>
+							<mx:TextArea width="240" height="22" editable="false" id="simulationIdBox"/>
+							<mx:Label text="Simulation Name:" fontStyle="italic" width="240"/>
+							<mx:TextArea width="240" height="22" id="simulationNameBox"/>
+							<mx:Label text="Discription:" fontStyle="italic" width="240"/>
+							<mx:TextArea width="240" height="22" id="simulationDiscBox"/>							
+							<mx:Label text="Source IP:" fontStyle="italic" width="240"/>
+							<mx:TextArea width="240" height="22" id="simulationIpBox"/>
+							<mx:Form width="240">
+								<mx:FormItem label="Lock Data (Write Protection):">
+									<mx:CheckBox/>
+								</mx:FormItem>
+							</mx:Form>							
+						</mx:VBox>
+							</mx:Canvas>
+							<mx:Canvas label="Configuration" width="100%" height="100%">
+								<mx:VBox color="#0B333C" left="5" right="16" top="5" bottom="5" horizontalAlign="center" paddingBottom="20">
+									<mx:TextArea id="instrutionBox2" width="240" wordWrap="true" editable="false" fontWeight="bold" textAlign="left" height="47">
+										<mx:text>New Simulation Components can be added, removed, or modified using the controls below</mx:text>
+									</mx:TextArea>
+									<mx:Label text="Load configuration form alternate simulation:" fontStyle="italic" width="240"/>
+									<mx:HBox width="240" horizontalAlign="center">
+										<mx:ComboBox id="loadDataFromCombo" width="170" dataProvider="{this.simulationComboDataProvider}"></mx:ComboBox>
+										<mx:Button label="Load" click="selectSimulation(event)"/>
+									</mx:HBox>
+									<mx:HRule width="240" strokeWidth="4" strokeColor="#929797"/>
+									<mx:Label text="Available Components:" fontStyle="italic" width="240"/>
+									<mx:DataGrid width="240" id="componentTable0" dataProvider="{this.componentTableDataProvider.rootItem}" showHeaders="false" change="selectComponent0(event)" height="142" creationComplete="getListOfComponents0()"/>
+									<mx:Button label="Add Selected Component" width="240">
+										<mx:click>newChiller(0.5,0.5,this.sizeStepper.value,this.sizeStepper.value,this.rotationStepper.value,true)</mx:click>
+									</mx:Button>
+									<mx:Button label="Set as Background" width="240">
+										<mx:click>newChiller(0.5,0.5,this.sizeStepper.value,this.sizeStepper.value,this.rotationStepper.value,true)</mx:click>
+									</mx:Button>
+									<mx:Label text="Properties of the Selected Component:" fontStyle="italic" width="240" id="label1"/>
+									<mx:Form width="240" paddingLeft="0" paddingRight="0">
+										<mx:FormItem label="Percent Size:" width="100%" horizontalAlign="left">
+											<mx:NumericStepper value="2" id="sizeStepper" change="this.canvas.currentlySelectedSimComponent.percentHeight = this.sizeStepper.value; this.canvas.currentlySelectedSimComponent.percentWidth = this.sizeStepper.value;" minimum="0" maximum="100" stepSize="1" width="127"/>
+										</mx:FormItem>
+										<mx:FormItem label="Rotation (deg):" width="100%">
+											<mx:NumericStepper id="rotationStepper" minimum="-180" maximum="180" stepSize="1" value="0" width="127">
+												<mx:change>this.canvas.currentlySelectedSimComponent.rotation = this.rotationStepper.value;</mx:change>
+											</mx:NumericStepper>
+										</mx:FormItem>
+										<mx:FormItem label="State Variable:" width="100%">
+											<mx:TextArea id="simComponentVariableSelector" editable="true" change="this.canvas.currentlySelectedSimComponent.componentVarable = this.simComponentVariableSelector.text;" width="127" height="21"/>
+										</mx:FormItem>
+										<mx:FormItem label="Drag and Drop:" width="100%">
+											<mx:CheckBox id="dragAndDropCheckBox" selected="true" click="this.canvas.currentlySelectedSimComponent.dragable = this.dragAndDropCheckBox.selected; stage.focus = this.canvas.currentlySelectedSimComponent;"/>										
+										</mx:FormItem>
+									</mx:Form>
+									<mx:Button label="Remove Selected Component" width="240" click="this.canvas.delSelectedSimComponent()"/>
+									<mx:Button label="Remove ALL Components" width="240" click="{this.canvas.delAllSimComponents();}"/>
+								</mx:VBox>
+							</mx:Canvas>
+							<mx:Canvas label="Components" width="100%" height="100%">
+								<mx:VBox color="#0B333C" left="5" right="16" top="5" bottom="5" horizontalAlign="center"  id="vbox2" paddingBottom="20">
+									<mx:TextArea id="instrutionBox0" width="240" wordWrap="true" editable="false" fontWeight="bold" textAlign="left" height="47">
+										<mx:text>Components Classes can be added (defined), removed, or modified using the controls below</mx:text>
+									</mx:TextArea>
+									<mx:Label text="Components:" fontStyle="italic" width="240"/>
+									<mx:DataGrid width="240" id="componentTable1" dataProvider="{this.componentTableDataProvider.rootItem}" showHeaders="false" change="selectComponent1(event)" height="142" creationComplete="getListOfComponents1()"/>
+									<mx:Grid>
+										<mx:GridRow width="100%" height="100%">
+											<mx:GridItem width="240" height="100%">
+												<mx:Button label="New"/>
+												<mx:Button label="Duplicate"/>
+												<mx:Spacer width="12"/>
+												<mx:Button label="Remove"/>
+											</mx:GridItem>
+										</mx:GridRow>
+									</mx:Grid>
+									<mx:Label text="Component Properties:" fontStyle="italic" width="240"/>
+									<mx:Form width="240" paddingLeft="0" paddingRight="0">
+										<mx:FormItem label="Id:" width="100%" horizontalAlign="left">
+											<mx:TextArea height="21" width="159" id="componentIdBox" editable="false"/>
+										</mx:FormItem>
+										<mx:FormItem label="Name:" width="100%" horizontalAlign="left">
+											<mx:TextArea height="21" width="159" id="componentNameBox"/>
+										</mx:FormItem>
+										<mx:FormItem label="Discription:" width="100%">
+											<mx:TextArea height="22" width="159" id="componentDiscBox"/>
+										</mx:FormItem>
+										<mx:FormItem label="X Center:" width="100%">
+											<mx:TextArea height="22" width="159" id="componentXBox"/>
+										</mx:FormItem>
+										<mx:FormItem label="Y Center:" width="100%">
+											<mx:TextArea height="23" width="159" id="componentYBox"/>										
+										</mx:FormItem>																			
+									</mx:Form>
+									<mx:Label text="Component States:" fontStyle="italic" width="240"/>
+									<mx:DataGrid width="240" id="stateTable" dataProvider="{this.stateTableDataProvider.rootItem}" showHeaders="false" height="142" change="selectState(event);"/>
+									<mx:GridItem width="240" height="22" id="griditem1">
+										<mx:Button label="New"/>
+										<mx:Button label="Duplicate"/>
+										<mx:Spacer width="12"/>
+										<mx:Button label="Remove"/>
+									</mx:GridItem>
+									<mx:Label text="State Properties:" fontStyle="italic" width="240"/>
+									<mx:Form width="240" paddingLeft="0" paddingRight="0">
+										<mx:FormItem label="Name:" width="100%" horizontalAlign="left">
+											<mx:TextArea height="21" width="142" id="stateNameBox"/>
+										</mx:FormItem>
+										<mx:FormItem label="Map Variable:" width="100%">
+											<mx:CheckBox/>
+										</mx:FormItem>
+										<mx:FormItem label="Condition:" width="100%">
+											<mx:ComboBox id="combobox1" width="142">
+												<mx:ArrayCollection>
+												        <mx:String >AND</mx:String>
+												        <mx:String>OR</mx:String>
+												</mx:ArrayCollection>
+											</mx:ComboBox>
+										</mx:FormItem>
+										<mx:FormItem label="equal to:" width="100%">
+											<mx:TextArea height="23" width="142" id="textarea4"/>										
+										</mx:FormItem>				
+										<mx:FormItem label="not equal to:" width="100%">
+											<mx:TextArea height="23" width="142" id="textarea3"/>										
+										</mx:FormItem>
+										<mx:FormItem label="greater than:" width="100%">
+											<mx:TextArea height="23" width="142" id="textarea2"/>										
+										</mx:FormItem>
+										<mx:FormItem label="less than:" width="100%">
+											<mx:TextArea height="23" width="142" id="textarea1"/>										
+										</mx:FormItem>																
+									</mx:Form>
+									<mx:Label text="State SVG:" fontStyle="italic" width="240"/>
+									<mx:TextArea height="142" width="240" id="inSvg"/>
+									<mx:Label text="SVG Preview:" fontStyle="italic" width="240"/>
+									<classes:svgCompilerAgent width="240" height="240" id="preSVG"/>
+									<mx:HBox width="240" verticalAlign="middle">
+										<mx:NumericStepper width="40" height="21" id="lowLimit" value="0" change="{this.scaleSlider.minimum = this.lowLimit.value;}"/>
+										<mx:HSlider width="143" liveDragging="true" id="scaleSlider" value="1" minimum="0" maximum="2"/>
+										<mx:NumericStepper width="40" height="21" id="highLimit" value="2" change="{this.scaleSlider.maximum = this.highLimit.value;}"/>
+									</mx:HBox>
+								</mx:VBox>
+							</mx:Canvas>
+							<mx:Canvas label="General Preferences" width="100%" height="100%">
+								<mx:VBox color="#0B333C" left="5" right="16" top="5" bottom="5" horizontalAlign="center" paddingBottom="20">
+								<mx:TextArea id="instrutionBox3" wordWrap="true" editable="false" width="240" fontWeight="bold" textAlign="left" height="34">
+									<mx:text><![CDATA[The general preference listed below affect all simulations and configurations]]></mx:text>
+								</mx:TextArea>
+								<mx:Form width="240" paddingLeft="0" paddingRight="0">
+									<mx:FormItem label="Selection Color:" width="100%">
+										<mx:ColorPicker selectedColor="#FFEE7D" id="selectionColorPicker" change="{this.canvas.setSelectionColor(this.selectionColorPicker.selectedColor);}"/>
+									</mx:FormItem>
+								</mx:Form>
+								<mx:Grid>
+									<mx:GridRow width="100%" height="100%">
+									</mx:GridRow>
+								</mx:Grid>
+								</mx:VBox>
+							</mx:Canvas>
+						</mx:Accordion>
+						<mx:ControlBar color="#0B333C" >
+							<mx:Button label="Simulation" click="this.mode.selectedIndex = 1; this.changeState();"/>
+							<mx:Spacer width="100%"/>
+							<mx:Button label="Save" click="this.saveButton()"/>
+							<mx:Button label="Close" click="closePanel()"/>
+						</mx:ControlBar>
+					</mx:Panel>
+				</mx:VBox>
+			</mx:AddChild>
+		</mx:State>
+		<mx:State name="configureComponent">
+			<mx:SetStyle target="{hbox1}" name="horizontalAlign" value="left"/>
+			<mx:SetStyle target="{hbox1}" name="verticalAlign" value="middle"/>
+			<mx:SetEventHandler target="{liveButton}" name="click" handler="dispatchEvent(new Event(&quot;closer&quot;));"/>
+			<mx:AddChild relativeTo="{hbox1}" position="lastChild">
+				<mx:VBox width="310" height="100%" verticalAlign="middle">
+					<mx:Panel id="configureComponentPanel" width="300" height="99%" layout="absolute" horizontalAlign="center" verticalAlign="middle" borderColor="#686666" title="Simulation Component Panel" color="#FFFFFF" horizontalScrollPolicy="off">
+						<mx:VBox color="#0B333C" top="5" left="5" right="16" bottom="5">
+							<mx:TextArea wordWrap="true" editable="false" width="100%" fontWeight="bold" textAlign="left" height="35">
+								<mx:text>Automatic control signals can be overided using the options below</mx:text>
+							</mx:TextArea>
+							<mx:Label text="Available Overides:" fontStyle="italic"/>
+							<mx:HBox width="100%">
+								<mx:Label text="Current State:"/>
+								<mx:Label id="overRideState" text=""/>
+								<mx:Spacer width="100%"/>
+								<mx:Label text="active" fontStyle="italic"/>
+								<mx:CheckBox id="overRideCheckBox" change="this.canvas.currentlySelectedSimComponent.tempControlOverRideActive = this.overRideCheckBox.selected"/>
+								<mx:Spacer/>
+							</mx:HBox>
+							<mx:HBox width="100%">
+								<mx:Spacer/>
+								<mx:HSlider id="overRideSlider" width="100%" maximum="1" minimum="0" change="this.canvas.currentlySelectedSimComponent.tempControlOverRide = this.overRideSlider.value;"/>
+								<mx:Spacer/>
+							</mx:HBox>
+							<mx:HRule width="100%" strokeWidth="4" strokeColor="#929797"/>
+							<mx:TextArea width="100%" wordWrap="true" editable="false" fontWeight="bold" textAlign="left" height="35">
+								<mx:text>Time domain data can be viewd using the plots below</mx:text>
+							</mx:TextArea>
+							<mx:Label text="Add Plots" fontStyle="normal" textDecoration="underline"/>
+							<mx:Label text="Variable:" fontStyle="italic"/>
+							<mx:HBox width="100%" horizontalAlign="left" verticalAlign="middle">
+								<mx:ComboBox id="addPlotCombo" width="196" dataProvider="{this.listOfDataVarablesDataProvider}" editable="true"></mx:ComboBox>
+								<mx:Button id="addPlotButton" label="Add" click="this.canvas.currentlySelectedSimComponent.varablesToPlot.push(this.addPlotCombo.text); this.updatePanel();"/>
+							</mx:HBox>
+							<mx:LineChart id="linechart" width="100%" height="100%" dataProvider="{lineChartDataProvider}">
+								<mx:horizontalAxis>
+									<mx:CategoryAxis dataProvider="{lineChartDataProvider}" categoryField="time"/>
+								</mx:horizontalAxis>
+							</mx:LineChart>
+							<mx:Legend dataProvider="{linechart}"/>
+							<mx:Label text="Remove Plots" fontStyle="normal" textDecoration="underline"/>
+							<mx:Label text="Variable:" fontStyle="italic"/>
+							<mx:HBox width="100%" verticalAlign="middle">
+								<mx:ComboBox id="removePlotCombo" width="171" dataProvider="{this.listOfDataVarablesDataProvider}" editable="true"></mx:ComboBox>
+								<mx:Button label="Remove" click="this.canvas.currentlySelectedSimComponent.varablesToPlot.splice(this.canvas.currentlySelectedSimComponent.varablesToPlot.indexOf(this.removePlotCombo.text),1); this.updatePanel();"/>
+							</mx:HBox>
+						</mx:VBox>
+						<mx:ControlBar>
+							<mx:Button label="Configure" color="#0B333C" click="this.mode.selectedIndex = 2; this.changeState();"/>
+							<mx:Spacer width="100%"/>
+							<mx:Button label="Save" color="#0B333C" click="this.saveConfiguration()"/>
+							<mx:Button label="Close" color="#0B333C" click="closePanel()"/>
+						</mx:ControlBar>
+					</mx:Panel>
+				</mx:VBox>
+			</mx:AddChild>
+		</mx:State>
+	</mx:states>
+	
+	<mx:transitions>
+        <mx:Transition id="toConfigure" fromState="" toState="configureDash">
+            <mx:Sequence targets="{[drawingArea, configurePanel]}">
+            	<mx:Resize duration="1000" easingFunction="Bounce.easeOut"/>
+                <mx:AddChildAction/>
+            </mx:Sequence>
+        </mx:Transition>
+        
+        <mx:Transition id="toDefault" fromState="configureDash" toState="">
+            <mx:Sequence targets="{[configurePanel, drawingArea]}">
+                <mx:RemoveChildAction/>
+                <mx:Resize duration="1000" easingFunction="Bounce.easeOut"/>
+            </mx:Sequence>
+        </mx:Transition>
+        <mx:Transition id="default2configureComponent" fromState="" toState="configureComponent">
+            <mx:Sequence targets="{[drawingArea, configurePanel]}">
+            	<mx:Resize duration="1000" easingFunction="Bounce.easeOut"/>
+                <mx:AddChildAction/>
+            </mx:Sequence>
+        </mx:Transition>
+        
+        <mx:Transition id="configureComponent2Default" fromState="configureComponent" toState="">
+            <mx:Sequence targets="{[configurePanel, drawingArea]}">
+                <mx:RemoveChildAction/>
+                <mx:Resize duration="1000" easingFunction="Bounce.easeOut"/>
+            </mx:Sequence>
+        </mx:Transition>
+	</mx:transitions>
+	
+	
+	<mx:Fade id="fadeOut" duration="500" alphaFrom="1.0" alphaTo="0.0" target="mainPanel"/>
+    <mx:Fade id="fadeIn" duration="500" alphaFrom="0.0" alphaTo="1.0"/>
+	<mx:Panel x="0" y="0" height="100%" layout="absolute" width="100%" id="mainPanel" creationCompleteEffect="{fadeIn}" removedEffect="{fadeOut}" backgroundColor="#353180" headerHeight="8" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+		<mx:VBox width="100%" x="0" height="100%" y="0" id="vbox1" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+			<mx:HBox width="100%" height="100%" id="hbox1" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+				<mx:HBox id="drawingArea" height="100%" width="100%" creationComplete="init()" horizontalScrollPolicy="off" verticalScrollPolicy="off"/>
+			</mx:HBox>
+		</mx:VBox>				
+		<mx:ControlBar id="controlbar1">
+			<mx:Label id="timeAt"/>
+			<mx:HSlider width="100%" id="timeSlider"/>
+			<mx:Label id="timeMax"/>
+			<mx:Button label="Play"  id="playButton"/>
+			<mx:Button label="Live"  id="liveButton"/>
+			<mx:Spacer width="100%"/>
+			<mx:ComboBox id="mode" editable="false" enabled="true" change="changeState()">
+				<mx:ArrayCollection>
+			         <mx:String >Standard Mode</mx:String>
+			         <mx:String>Component Editor</mx:String>
+			         <mx:String>Dash Editor</mx:String>
+				</mx:ArrayCollection>
+
+			</mx:ComboBox>
+		</mx:ControlBar>
+	</mx:Panel>
+</mx:Module>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="100%" height="100%" creationComplete="init()">
+	<mx:Script source="logout.as"/>
+	<mx:Fade id="fadeOut" duration="500" alphaFrom="1.0" alphaTo="0.0" target="mainPanel"/>
+    <mx:Fade id="fadeIn" duration="500" alphaFrom="0.0" alphaTo="1.0"/>
+	<mx:Panel x="0" y="0" height="100%" layout="absolute" width="100%" id="mainPanel" creationCompleteEffect="{fadeIn}" removedEffect="{fadeOut}" backgroundColor="#353180" headerHeight="8">
+		<mx:Script>
+   		 <![CDATA[
+   		 	import mx.validators.EmailValidator;
+   		 	import mx.core.SpriteAsset;
+   		 	import mx.messaging.AbstractConsumer;
+   		 	import mx.core.BitmapAsset;
+   		 	import flash.display.Sprite;
+            [Embed(source="exit.svg")]
+            [Bindable]
+            public var exitSVG:Class;
+            [Embed(source="lock.svg")]
+            [Bindable]
+            public var lockSVG:Class;
+       	 ]]>
+    	</mx:Script>
+		<mx:HBox top="0" left="0" bottom="0" right="0">
+			<mx:HBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+				<mx:Spacer/>
+				<mx:Image source="{lockSVG}"  scaleContent="true" autoLoad="true" maintainAspectRatio="false" click="lock()" width="95%" height="95%"/>
+				<mx:Image source="{exitSVG}"  scaleContent="true" autoLoad="true" maintainAspectRatio="false" click="this.parentApplication.logout()" width="100%" height="100%"/>
+			</mx:HBox>
+		</mx:HBox>
+		
+		
+	</mx:Panel>
+</mx:Module>

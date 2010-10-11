@@ -6,14 +6,18 @@
 		var $value;
 		var $db;
 		var $longPoll;
+		var $session;
+		var $newname;
 			
-		function Datastore($d=null,$n=null,$v=null,$l=false)
-		{
+		function Datastore($d=null,$n=null,$v=null,$s=null,$nn=null,$l=false){
+		
 			$this->name = $n;
 			$this->value = $v;
 			if($d == null) $this->db = new Datastore;
 			else $this->db = $d;
 			$this->longPoll = $l;
+			$this->session = $s;
+			$this->session = $nn;
 		}	
 	
 		public function read($n=null, $v=null, $longPoll=null){
@@ -44,8 +48,8 @@
 			}
 			
 			//longpoll
-			if($longPoll == true && $v != null && $v != '')
-			{
+			if($longPoll == true && $v != null && $v != ''){
+			
 				if(json_decode(str_replace("'",'"',$v)) != null){
 				
 					$v_is_array = true;
@@ -88,17 +92,20 @@
 			}
 		}
 		
-		public function write()
-		{
+		public function write($n=null,$v=null){
+		
+			if($n == null) $n = $this->name;
+			if($v == null) $v = $this->value;
 			
-			$n = json_decode($this->name);
-			$v = json_decode($this->value);
-			if($n == null)
+			if(json_decode(str_replace("'",'"',$n)) == null)
 			{
 				$results = $this->writeValue($this->name,$this->value);
 			}
 			else
 			{
+				$n = json_decode(str_replace("'",'"',$n));
+				$v = json_decode(str_replace("'",'"',$v));
+				
 				$len_n = count($n);
 				$len_v = count($v);
 			
@@ -113,13 +120,27 @@
 			return $results;
 		}
 		
-		public function rw()
-		{
+		public function rw(){
 		
 		}
 		
-		public function link2session()
-		{
+		public function rename($vn=null,$nn=null,$sn=null){
+			
+			if($vn == null) $vn = $this->name;
+			if($nn == null) $nn = $this->newname;
+			if($sn == null) $sn = $this->session;
+			
+			// get variable id
+			$results = $this->db->sqlQuery("select detailVariableSession.idvariable from detailVariableSession inner join variable on variable.idvariable = detailVariableSession.idvariable inner join session on session.idsession = detailVariableSession.idsession where session.name='$sn' and variable.name='$vn' and detailVariableSession.rw='1'");
+			if($results->numOfRows > 0){
+				$id = $results->result[0]['idvariable'];
+				$results = $this->db->sqlQuery("update variable set name='$nn' where idvariable='$id'");
+				return $results;
+			}
+			return $error = 'variable not found';
+		}
+		
+		public function link2session(){
 		
 		}
 	
@@ -148,6 +169,9 @@
 				$result=$this->db->sqlQuery($query);
 			}else { //make new variable
 				$result=$this->db->sqlQuery("insert variable set name='$n', value='$v', lastUpdated='$t'");
+				
+				//$vid = $this->db->sqlQuery("select idvariable from variable where name='$n'");
+				//$result[] = clone $this->db->sqlQuery("insert detailVariableSession set idvariable='$vid', idsession='$sid', rw='1'");
 			}
 			return $result;
 		}

@@ -46,6 +46,12 @@
 						elseif($mode == "list"){
 							$o = $ds->listVaraibles();
 						}
+						elseif($mode == "rename"){
+							if(isset($_GET['name'])) $ds->name = $_GET['name'];
+							if(isset($_GET['newname'])) $ds->newname = $_GET['newname'];
+							if(isset($_GET['user'])) $ds->session = $_GET['user'];
+							$o = $ds->rename();
+						}
 						else{
 						$o->error = 'mode undefinded';
 						}
@@ -165,7 +171,18 @@
 			}
 			else{
 				$y = new Spyc();
-				echo $y->YAMLDump($o,4,400);
+				//bug fix
+				if(count($o) > 1)
+				{
+					for($i = 0; $i < count($o); $i++)
+					{
+						echo $y->YAMLDump($o[$i],4,400);
+					}
+				}
+				else
+				{
+					echo $y->YAMLDump($o,4,400);
+				}
 			}
 		
 		}else{

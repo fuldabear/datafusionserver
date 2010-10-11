@@ -1,0 +1,553 @@
+<?xml version="1.0" ?>
+
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:system="flash.system.*" xmlns:ns1="flexmdi.containers.*" viewSourceURL="srcview/index.html">
+    <mx:Style source="dashboard.css"/>
+	<mx:Script>
+		<![CDATA[
+			import flexmdi.effects.effectsLib.MDIVistaEffects;
+		]]>
+	</mx:Script>
+	<mx:Script source="dashboard.as"/>
+	
+    <!-- Define one view state, in addition to the base state.-->
+    <mx:states>
+        <mx:State name="App" id="appState">
+            <mx:RemoveChild target="{loginPanel}"/>
+            <mx:RemoveChild target="{spacer2}"/>
+            <mx:SetProperty name="layout" value="absolute"/>
+            <mx:SetStyle target="{image1}" name="verticalCenter" value="0"/>
+            <mx:SetStyle target="{image1}" name="horizontalCenter" value="0"/>
+            <mx:AddChild relativeTo="{image1}" position="before">
+                <mx:MenuBar id="topMenuBar" labelField="@label" top="0" left="0" width="100%" itemClick="menuHandler2(event);">
+					<mx:XMLList>
+						<menuitem label="Applications">
+							<menuitem label="Session Manager" data="session"/>
+							<menuitem label="Data Manager" data="data"/>
+							<menuitem label="Function Manager" data="function"/>
+						</menuitem>
+						<menuitem label="Help">
+							<menuitem label="Debug" data="debug"/>
+							<menuitem label="About" data="about"/>
+						</menuitem>
+					</mx:XMLList>
+				</mx:MenuBar>
+            </mx:AddChild>
+            <mx:AddChild position="lastChild">
+                <!--<mx:ModuleLoader id="mainMod" left="10" right="10" bottom="10" top="30" />-->
+            </mx:AddChild>
+            <mx:AddChild position="lastChild">
+                <mx:TextArea bottom="5" left="10" right="10" height="20" text="Login Successful" id="statusBar" fontSize="11"/>
+            </mx:AddChild>
+        </mx:State>
+        <mx:State name="session" basedOn="App">
+            <mx:AddChild position="lastChild">
+                <mx:Panel layout="absolute" top="30" left="10" bottom="30" right="10" title="Session Manager">
+                    <mx:HBox top="35" left="5" right="5" bottom="5">
+                        <mx:VBox width="33%" height="100%">
+                            <mx:DataGrid height="100%" width="100%">
+                                <mx:columns>
+                                    <mx:DataGridColumn headerText="Name" dataField="name"/>
+                                    <mx:DataGridColumn headerText="Variables" dataField="varaibles"/>
+                                    <mx:DataGridColumn headerText="Functions" dataField="functions"/>
+									<mx:DataGridColumn headerText="Expiration" dataField="expiration"/>
+                                </mx:columns>
+                            </mx:DataGrid>
+                            <mx:HBox width="100%" height="35" verticalAlign="middle">
+								<mx:Spacer/>
+								<mx:Button label="Delete"/>
+								<mx:Spacer/>
+								<mx:VRule height="100%"/>
+								<mx:Spacer width="100%"/>
+                                <mx:Button label="Duplicate"/>
+                                <mx:Spacer/>
+                                <mx:Button label="New"/>
+								<mx:Spacer/>
+                            </mx:HBox>
+                        </mx:VBox>
+                        <mx:VBox width="66%" height="100%">
+                            <mx:Form width="100%" height="100%">
+                                <mx:FormHeading label="Authentication" width="100%"/>
+                                <mx:FormItem label="Session Name" width="100%">
+                                    <mx:TextInput/>
+                                </mx:FormItem>
+								<mx:FormItem label="Session Password" width="100%">
+									<mx:TextInput displayAsPassword="true"/>
+								</mx:FormItem>
+								<mx:FormHeading label="Properties" width="100%"/>
+								<mx:FormItem label="Expiration" width="100%">
+									<mx:HBox>
+										<mx:DateField x="129" y="1"/>
+									</mx:HBox>
+								</mx:FormItem>
+								<mx:FormItem label="Description" width="100%">
+									<mx:TextInput width="100%" height="150"/>
+								</mx:FormItem>
+								<mx:FormHeading label="Statistics" width="100%"/>
+								<mx:FormItem label="Variables" width="100%" height="150">
+									<mx:HBox width="100%" height="100%">
+										<mx:PieChart id="piechart0" width="50%" height="100%">
+											<mx:series>
+												<mx:PieSeries displayName="Series 1" field=""/>
+											</mx:series>
+										</mx:PieChart>
+										<mx:Legend dataProvider="{piechart0}"/>
+									</mx:HBox>
+								</mx:FormItem>
+								<mx:FormItem label="Functions" width="100%" height="150">
+									<mx:HBox width="100%" height="100%">
+										<mx:PieChart id="piechart1" width="50%" height="100%">
+											<mx:series>
+												<mx:PieSeries displayName="Series 1" field=""/>
+											</mx:series>
+										</mx:PieChart>
+										<mx:Legend dataProvider="{piechart1}"/>
+									</mx:HBox>
+								</mx:FormItem>
+                            </mx:Form>
+                        </mx:VBox>
+                    </mx:HBox>
+                </mx:Panel>
+            </mx:AddChild>
+        </mx:State>
+        <mx:State name="data" basedOn="App">
+            <mx:AddChild position="lastChild">
+                <mx:Panel layout="absolute" top="30" left="10" bottom="30" right="10" title="Session Manager">
+                    <mx:HBox top="35" left="5" right="5" bottom="5">
+                        <mx:VBox width="33%" height="100%">
+                            <mx:DataGrid height="100%" width="100%">
+                                <mx:columns>
+                                    <mx:DataGridColumn headerText="Name" dataField="name"/>
+                                    <mx:DataGridColumn headerText="Variables" dataField="varaibles"/>
+                                    <mx:DataGridColumn headerText="Functions" dataField="functions"/>
+                                <mx:DataGridColumn headerText="Expiration" dataField="expiration"/>
+                                </mx:columns>
+                            </mx:DataGrid>
+                            <mx:HBox width="100%" height="35" verticalAlign="middle">
+                            <mx:Spacer/>
+                            <mx:Button label="Delete"/>
+                            <mx:Spacer/>
+                            <mx:VRule height="100%"/>
+                            <mx:Spacer width="100%"/>
+                                <mx:Button label="Duplicate"/>
+                                <mx:Spacer/>
+                                <mx:Button label="New"/>
+                            <mx:Spacer/>
+                            </mx:HBox>
+                        </mx:VBox>
+                        <mx:VBox width="66%" height="100%">
+                            <mx:Form width="100%" height="100%">
+                                <mx:FormHeading label="Authentication" width="100%"/>
+                                <mx:FormItem label="Session Name" width="100%">
+                                    <mx:TextInput/>
+                                </mx:FormItem>
+                            <mx:FormItem label="Session Password" width="100%">
+                            	<mx:TextInput displayAsPassword="true"/>
+                            </mx:FormItem>
+                            <mx:FormHeading label="Properties" width="100%"/>
+                            <mx:FormItem label="Expiration" width="100%">
+                            	<mx:HBox>
+                            		<mx:DateField x="129" y="1"/>
+                            	</mx:HBox>
+                            </mx:FormItem>
+                            <mx:FormItem label="Description" width="100%">
+                            	<mx:TextInput width="100%" height="150"/>
+                            </mx:FormItem>
+                            <mx:FormHeading label="Statistics" width="100%"/>
+                            
+                            </mx:Form>
+                        </mx:VBox>
+                    </mx:HBox>
+                </mx:Panel>
+            </mx:AddChild>
+        </mx:State>
+        <mx:State name="function" basedOn="App">
+            <mx:AddChild position="lastChild">
+                <mx:Panel layout="absolute" top="30" left="10" bottom="30" right="10" title="Session Manager">
+                    <mx:HBox top="35" left="5" right="5" bottom="5">
+                        <mx:VBox width="33%" height="100%">
+                            <mx:DataGrid height="100%" width="100%">
+                                <mx:columns>
+                                    <mx:DataGridColumn headerText="Name" dataField="name"/>
+                                    <mx:DataGridColumn headerText="Variables" dataField="varaibles"/>
+                                    <mx:DataGridColumn headerText="Functions" dataField="functions"/>
+                                <mx:DataGridColumn headerText="Expiration" dataField="expiration"/>
+                                </mx:columns>
+                            </mx:DataGrid>
+                            <mx:HBox width="100%" height="35" verticalAlign="middle">
+                            <mx:Spacer/>
+                            <mx:Button label="Delete"/>
+                            <mx:Spacer/>
+                            <mx:VRule height="100%"/>
+                            <mx:Spacer width="100%"/>
+                                <mx:Button label="Duplicate"/>
+                                <mx:Spacer/>
+                                <mx:Button label="New"/>
+                            <mx:Spacer/>
+                            </mx:HBox>
+                        </mx:VBox>
+                        <mx:VBox width="66%" height="100%">
+                            <mx:Form width="100%" height="100%">
+                                <mx:FormHeading label="Authentication" width="100%"/>
+                                <mx:FormItem label="Session Name" width="100%">
+                                    <mx:TextInput/>
+                                </mx:FormItem>
+                            <mx:FormItem label="Session Password" width="100%">
+                            	<mx:TextInput displayAsPassword="true"/>
+                            </mx:FormItem>
+                            <mx:FormHeading label="Properties" width="100%"/>
+                            <mx:FormItem label="Expiration" width="100%">
+                            	<mx:HBox>
+                            		<mx:DateField x="129" y="1"/>
+                            	</mx:HBox>
+                            </mx:FormItem>
+                            <mx:FormItem label="Description" width="100%">
+                            	<mx:TextInput width="100%" height="150"/>
+                            </mx:FormItem>
+                            <mx:FormHeading label="Statistics" width="100%"/>
+                            
+                            </mx:Form>
+                        </mx:VBox>
+                    </mx:HBox>
+                </mx:Panel>
+            </mx:AddChild>
+        </mx:State>
+        <mx:State name="debug" basedOn="App">
+            <mx:AddChild position="lastChild">
+                <mx:Panel layout="absolute" top="30" left="10" bottom="30" right="10" title="Debug Tool">
+                    <mx:HBox top="35" left="5" right="5" bottom="5">
+                        <mx:TabNavigator width="50%" height="100%">
+							<mx:Canvas label="Sessions" width="100%" height="100%">
+								<mx:ToggleButtonBar top="0" left="0" right="0" dataProvider="{viewstack1}">
+								</mx:ToggleButtonBar>
+								<mx:ViewStack id="viewstack1" top="20" left="0" bottom="0" right="0">
+									<mx:Form label="Create" width="100%" height="100%">
+										<mx:FormHeading label="Authorization"/>
+										<mx:FormItem label="Session Name">
+											<mx:TextInput id="session_name_create" creationComplete="{this.session_name_create.text = this.user_name.text; updateDebugSessionCreate(event);}" change="updateDebugSessionCreate(event);" click="updateDebugSessionCreate(event);"/>
+										</mx:FormItem>
+										<mx:FormItem label="Session Password">
+											<mx:TextInput displayAsPassword="true" id="session_password_create" creationComplete="{this.session_password_create.text = this.user_password.text; updateDebugSessionCreate(event);}" change="updateDebugSessionCreate(event);" click="updateDebugSessionCreate(event);"/>
+										</mx:FormItem>
+										<mx:FormHeading label="New Session Properties"/>
+										<mx:FormItem label="Name">
+											<mx:TextInput change="updateDebugSessionCreate(event);" id="session_newname_create" click="updateDebugSessionCreate(event);"/>
+										</mx:FormItem>
+										<mx:FormItem label="Password">
+											<mx:TextInput displayAsPassword="true" change="updateDebugSessionCreate(event);" id="session_newpassword_create" click="updateDebugSessionCreate(event);"/>
+										</mx:FormItem>
+										<mx:FormItem label="Expiration">
+											<mx:DateField change="updateDebugSessionCreate(event);" id="session_expiration_create" width="150" click="updateDebugSessionCreate(event);"/>
+										</mx:FormItem>
+										<mx:FormItem label="Description" width="100%" height="115">
+											<mx:TextInput width="100%" height="100%" change="updateDebugSessionCreate(event);" id="session_description_create" click="updateDebugSessionCreate(event);"/>
+										</mx:FormItem>
+									</mx:Form>
+									<mx:Form label="Remove" width="100%" height="100%">
+										<mx:FormHeading label="Authorization"/>
+										<mx:FormItem label="Session Name">
+											<mx:TextInput id="session_name_remove" creationComplete="{this.session_name_remove.text = this.user_name.text; updateDebugSessionRemove(event);}" change="updateDebugSessionRemove(event);" click="updateDebugSessionRemove(event);"/>
+										</mx:FormItem>
+										<mx:FormItem label="Session Password">
+											<mx:TextInput displayAsPassword="true" id="session_password_remove" creationComplete="{this.session_password_remove.text = this.user_password.text; updateDebugSessionRemove(event);}" change="updateDebugSessionRemove(event);" click="updateDebugSessionRemove(event);"/>
+										</mx:FormItem>
+									</mx:Form>
+									<mx:Form label="Set Name" width="100%" height="100%">
+										<mx:FormHeading label="Authorization"/>
+										<mx:FormItem label="Session Name">
+											<mx:TextInput id="session_name_name" creationComplete="{this.session_name_password.text = this.user_name.text; updateDebugSessionName(event);}" change="updateDebugSessionName(event);" click="updateDebugSessionName(event);"/>
+										</mx:FormItem>
+										<mx:FormItem label="Session Password">
+											<mx:TextInput displayAsPassword="true" id="session_password_name" creationComplete="{this.session_password_password.text = this.user_password.text; updateDebugSessionName(event);}" change="updateDebugSessionName(event);" click="updateDebugSessionName(event);"/>
+										</mx:FormItem>
+										<mx:FormHeading label="New Session Properties"/>
+										<mx:FormItem label="Name">
+											<mx:TextInput id="session_newname_name" change="updateDebugSessionName(event);" click="updateDebugSessionName(event);"/>
+										</mx:FormItem>
+									</mx:Form>
+									<mx:Form label="Set Password" width="100%" height="100%">
+										<mx:FormHeading label="Authorization"/>
+										<mx:FormItem label="Session Name">
+											<mx:TextInput id="session_name_password" creationComplete="{this.session_name_password.text = this.user_name.text; updateDebugSessionPassword(event);}" change="updateDebugSessionPassword(event);" click="updateDebugSessionPassword(event);"/>
+										</mx:FormItem>
+										<mx:FormItem label="Session Password">
+											<mx:TextInput displayAsPassword="true" id="session_password_password" creationComplete="{this.session_password_password.text = this.user_password.text; updateDebugSessionPassword(event);}" change="updateDebugSessionPassword(event);" click="updateDebugSessionPassword(event);"/>
+										</mx:FormItem>
+										<mx:FormHeading label="New Session Properties"/>
+										<mx:FormItem label="Password">
+											<mx:TextInput id="session_newpassword_password" change="updateDebugSessionPassword(event);" click="updateDebugSessionPassword(event);"/>
+										</mx:FormItem>
+									</mx:Form>
+									<mx:Form label="Set Description" width="100%" height="100%">
+										<mx:FormHeading label="Authorization"/>
+										<mx:FormItem label="Session Name">
+											<mx:TextInput id="session_name_description" creationComplete="{this.session_name_description.text = this.user_name.text; updateDebugSessionDescription(event);}" change="updateDebugSessionDescription(event);" click="updateDebugSessionDescription(event);"/>
+										</mx:FormItem>
+										<mx:FormItem label="Session Password">
+											<mx:TextInput displayAsPassword="true" id="session_password_description" creationComplete="{this.session_password_description.text = this.user_password.text; updateDebugSessionDescription(event);}" change="updateDebugSessionDescription(event);" click="updateDebugSessionDescription(event);"/>
+										</mx:FormItem>
+										<mx:FormHeading label="New Session Properties"/>
+										<mx:FormItem label="Description" width="100%" height="115">
+											<mx:TextInput width="100%" height="100%" id="session_description_description" change="updateDebugSessionDescription(event);" click="updateDebugSessionDescription(event);"/>
+										</mx:FormItem>
+									</mx:Form>
+									<mx:Form label="Set Expiration" width="100%" height="100%">
+										<mx:FormHeading label="Authorization"/>
+										<mx:FormItem label="Session Name">
+											<mx:TextInput id="session_name_expiration" creationComplete="{this.session_name_expiration.text = this.user_name.text; updateDebugSessionExpiration(event);}" change="updateDebugSessionExpiration(event);" click="updateDebugSessionExpiration(event);"/>
+										</mx:FormItem>
+										<mx:FormItem label="Session Password">
+											<mx:TextInput displayAsPassword="true" id="session_password_expiration" creationComplete="{this.session_password_expiration.text = this.user_password.text; updateDebugSessionExpiration(event);}" change="updateDebugSessionExpiration(event);" click="updateDebugSessionExpiration(event);"/>
+										</mx:FormItem>
+										<mx:FormHeading label="New Session Properties"/>
+										<mx:FormItem label="Expiration">
+											<mx:DateField id="session_expiration_expiration" change="updateDebugSessionExpiration(event);" click="updateDebugSessionExpiration(event);" width="150"/>
+										</mx:FormItem>
+									</mx:Form>
+									<mx:Form id="session_list" label="List" width="100%" height="100%">
+										<mx:FormHeading label="Authorization"/>
+										<mx:FormItem label="Session Name">
+											<mx:TextInput id="session_name_list" creationComplete="{this.session_name_list.text = this.user_name.text; updateDebugSessionList(event);}" change="updateDebugSessionList(event);" click="updateDebugSessionList(event);"/>
+										</mx:FormItem>
+										<mx:FormItem label="Session Password">
+											<mx:TextInput displayAsPassword="true" id="session_password_list" creationComplete="{this.session_password_list.text = this.user_password.text; updateDebugSessionList(event);}" change="updateDebugSessionList(event);" click="updateDebugSessionList(event);"/>
+										</mx:FormItem>
+									</mx:Form>
+								</mx:ViewStack>
+							</mx:Canvas>
+                            <mx:Canvas label="Varaibles" width="100%" height="100%">
+								<mx:ToggleButtonBar top="0" left="0" right="0" dataProvider="{viewstack2}">
+								</mx:ToggleButtonBar>
+								<mx:ViewStack id="viewstack2" top="20" left="0" bottom="0" right="0">
+									<mx:Form label="Read" width="100%" height="100%">
+										<mx:FormHeading label="Authorization"/>
+										<mx:FormItem label="Session Name">
+											<mx:TextInput id="variable_read_name" creationComplete="{this.variable_read_name.text = this.user_name.text; updateDebugVariableRead(event);}" change="updateDebugVariableRead(event);" click="updateDebugVariableRead(event);"/>
+										</mx:FormItem>
+										<mx:FormItem label="Session Password">
+											<mx:TextInput displayAsPassword="true" id="variable_read_password" creationComplete="{this.variable_read_password.text = this.user_password.text; updateDebugVariableRead(event);}" change="updateDebugVariableRead(event);" click="updateDebugVariableRead(event);"/>
+										</mx:FormItem>
+										<mx:FormHeading label="Variables to Read"/>
+										<mx:FormItem label="Name(s)">
+											<mx:HBox>
+												<mx:TextInput change="updateDebugVariableRead(event);" id="variable_read_names" click="updateDebugVariableRead(event);" width="100%"/>
+												<mx:Text text="Separate multiple variables with commas"/>
+											</mx:HBox>
+										</mx:FormItem>
+										<mx:FormItem label="Value(s)">
+											<mx:HBox>
+												<mx:TextInput change="updateDebugVariableRead(event);" id="variable_read_values" click="updateDebugVariableRead(event);" width="100%"/>
+												<mx:Text text="Separate multiple variables with commas"/>
+											</mx:HBox>
+										</mx:FormItem>
+										<mx:FormItem label="Note:" width="100%" height="100%">
+											<mx:TextArea text="If values are included the server will attempt to run in long polling mode. Long polling is a simple yet powerful technique that increases network performance. Once the client initiates a connection and request for information the server checks if the information has changed since the last request. If it has not it waits until it has before responding to the client with additional information. This mode requires the client to be aware of this behavior and prepared for connection timeouts." editable="false" width="100%" height="100%"/>
+										</mx:FormItem>
+									</mx:Form>
+									<mx:Form label="Write" width="100%" height="100%">
+										<mx:FormHeading label="Authorization"/>
+										<mx:FormItem label="Session Name">
+											<mx:TextInput id="variable_write_name" creationComplete="{this.variable_write_name.text = this.user_name.text; updateDebugVariableWrite(event);}" change="updateDebugVariableWrite(event);" click="updateDebugVariableWrite(event);"/>
+										</mx:FormItem>
+										<mx:FormItem label="Session Password">
+											<mx:TextInput displayAsPassword="true" id="variable_write_password" creationComplete="{this.variable_write_password.text = this.user_password.text; updateDebugVariableWrite(event);}" change="updateDebugVariableWrite(event);" click="updateDebugVariableWrite(event);"/>
+										</mx:FormItem>
+										<mx:FormHeading label="Variables to Write"/>
+										<mx:FormItem label="Name(s)">
+											<mx:HBox>
+												<mx:TextInput change="updateDebugVariableWrite(event);" id="variable_write_names" click="updateDebugVariableWrite(event);" width="100%"/>
+												<mx:Text text="Separate multiple variables with commas"/>
+											</mx:HBox>
+										</mx:FormItem>
+										<mx:FormItem label="Value(s)">
+											<mx:HBox>
+												<mx:TextInput change="updateDebugVariableWrite(event);" id="variable_write_values" click="updateDebugVariableWrite(event);" width="100%"/>
+												<mx:Text text="Separate multiple variables with commas"/>
+											</mx:HBox>
+										</mx:FormItem>
+									</mx:Form>
+									<mx:Form label="RW" width="100%" height="100%">
+										<mx:FormHeading label="Authorization"/>
+										<mx:FormItem label="Session Name">
+											<mx:TextInput id="variable_rw_name" creationComplete="{this.variable_rw_name.text = this.user_name.text; updateDebugVariableRW(event);}" change="updateDebugVariableRW(event);" click="updateDebugVariableRW(event);"/>
+										</mx:FormItem>
+										<mx:FormItem label="Session Password">
+											<mx:TextInput displayAsPassword="true" id="variable_rw_password" creationComplete="{this.variable_rw_password.text = this.user_password.text; updateDebugVariableRW(event);}" change="updateDebugVariableRW(event);" click="updateDebugVariableRW(event);"/>
+										</mx:FormItem>
+										<mx:FormHeading label="Variables to Read or Write"/>
+										<mx:FormItem label="Mode(s)">
+											<mx:HBox>
+												<mx:TextInput change="updateDebugVariableRW(event);" id="variable_rw_modes" click="updateDebugVariableRW(event);" width="100%"/>
+												<mx:Text text="Separate multiple variables with commas"/>
+											</mx:HBox>
+										</mx:FormItem>
+										<mx:FormItem label="Name(s)">
+											<mx:HBox>
+												<mx:TextInput change="updateDebugVariableRW(event);" id="variable_rw_names" click="updateDebugVariableRW(event);" width="100%"/>
+												<mx:Text text="Separate multiple variables with commas"/>
+											</mx:HBox>
+										</mx:FormItem>
+										<mx:FormItem label="Value(s)">
+											<mx:HBox>
+												<mx:TextInput change="updateDebugVariableRW(event);" id="variable_rw_values" click="updateDebugVariableRW(event);" width="100%"/>
+												<mx:Text text="Separate multiple variables with commas"/>
+											</mx:HBox>
+										</mx:FormItem>
+									</mx:Form>
+									<mx:Form label="Rename" width="100%" height="100%">
+										<mx:FormHeading label="Authorization"/>
+										<mx:FormItem label="Session Name">
+											<mx:TextInput id="variable_rename_name" creationComplete="{this.variable_rename_name.text = this.user_name.text; updateDebugVariableRename(event);}" change="updateDebugVariableRename(event);" click="updateDebugVariableRename(event);"/>
+										</mx:FormItem>
+										<mx:FormItem label="Session Password">
+											<mx:TextInput displayAsPassword="true" id="variable_rename_password" creationComplete="{this.variable_rename_password.text = this.user_password.text; updateDebugVariableRename(event);}" change="updateDebugVariableRename(event);" click="updateDebugVariableRename(event);"/>
+										</mx:FormItem>
+										<mx:FormHeading label="Variable Properties"/>
+										<mx:FormItem label="Name">
+											<mx:TextInput change="updateDebugVariableRename(event);" id="variable_rename_names" click="updateDebugVariableRename(event);" width="100%"/>
+										</mx:FormItem>
+										<mx:FormItem label="New Name">
+											<mx:TextInput change="updateDebugVariableRename(event);" id="variable_rename_newname" click="updateDebugVariableRename(event);" width="100%"/>
+										</mx:FormItem>
+									</mx:Form>
+									<mx:Form label="Remove" width="100%" height="100%">
+										<mx:FormHeading label="Authorization"/>
+										<mx:FormItem label="Session Name">
+											<mx:TextInput id="variable_remove_name" creationComplete="{this.variable_remove_name.text = this.user_name.text; updateDebugVariableRemove(event);}" change="updateDebugVariableRemove(event);" click="updateDebugVariableRemove(event);"/>
+										</mx:FormItem>
+										<mx:FormItem label="Session Password">
+											<mx:TextInput displayAsPassword="true" id="variable_remove_password" creationComplete="{this.variable_remove_password.text = this.user_password.text; updateDebugVariableRemove(event);}" change="updateDebugVariableRemove(event);" click="updateDebugVariableRemove(event);"/>
+										</mx:FormItem>
+										<mx:FormHeading label="Variable Properties"/>
+										<mx:FormItem label="Name">
+											<mx:TextInput change="updateDebugVariableRemove(event);" id="variable_remove_names" click="updateDebugVariableRemove(event);" width="100%"/>
+										</mx:FormItem>
+									</mx:Form>
+									<mx:Form label="Link" width="100%" height="100%">
+										<mx:FormHeading label="Authorization"/>
+										<mx:FormItem label="Session Name">
+											<mx:TextInput id="variable_link_name" creationComplete="{this.variable_link_name.text = this.user_name.text; updateDebugVariableLink(event);}" change="updateDebugVariableLink(event);" click="updateDebugVariableLink(event);"/>
+										</mx:FormItem>
+										<mx:FormItem label="Session Password">
+											<mx:TextInput displayAsPassword="true" id="variable_link_password" creationComplete="{this.variable_link_password.text = this.user_password.text; updateDebugVariableLink(event);}" change="updateDebugVariableLink(event);" click="updateDebugVariableLink(event);"/>
+										</mx:FormItem>
+										<mx:FormHeading label="Variable Properties"/>
+										<mx:FormItem label="Name">
+											<mx:TextInput change="updateDebugVariableLink(event);" id="variable_link_names" click="updateDebugVariableLink(event);" width="100%"/>
+										</mx:FormItem>
+										<mx:FormHeading label="Session Properties"/>
+										<mx:FormItem label="Name">
+											<mx:TextInput change="updateDebugVariableLink(event);" id="variable_link_session" click="updateDebugVariableLink(event);" width="100%"/>
+										</mx:FormItem>
+									</mx:Form>
+									<mx:Form label="List" width="100%" height="100%">
+										<mx:FormHeading label="Authorization"/>
+										<mx:FormItem label="Session Name">
+											<mx:TextInput id="variable_list_name" creationComplete="{this.variable_list_name.text = this.user_name.text; updateDebugVariableList(event);}" change="updateDebugVariableList(event);" click="updateDebugVariableList(event);"/>
+										</mx:FormItem>
+										<mx:FormItem label="Session Password">
+											<mx:TextInput displayAsPassword="true" id="variable_list_password" creationComplete="{this.variable_list_password.text = this.user_password.text; updateDebugVariableList(event);}" change="updateDebugVariableList(event);" click="updateDebugVariableList(event);"/>
+										</mx:FormItem>
+									</mx:Form>
+								</mx:ViewStack>
+                            </mx:Canvas>
+                            <mx:Canvas label="Functions" width="100%" height="100%">
+								<mx:ViewStack id="viewstack3" top="20" left="0" bottom="0" right="0">
+									<mx:Form label="Read" width="100%" height="100%">
+									</mx:Form>
+									<mx:Form label="Write" width="100%" height="100%">
+									</mx:Form>
+									<mx:Form label="RW" width="100%" height="100%">
+									</mx:Form>
+									<mx:Form label="Remove" width="100%" height="100%">
+									</mx:Form>
+									<mx:Form label="Link" width="100%" height="100%">
+									</mx:Form>
+									<mx:Form label="Unlink" width="100%" height="100%">
+									</mx:Form>
+									<mx:Form label="List" width="100%" height="100%">
+									</mx:Form>
+								</mx:ViewStack>
+                            </mx:Canvas>
+                        </mx:TabNavigator>
+                        <mx:VDividedBox width="50%" height="100%">
+                            <mx:VBox width="100%" height="33%">
+								<mx:HBox width="100%" verticalAlign="bottom">
+									<mx:FormHeading label="Sent"/>
+									<mx:Spacer width="100%" height="30"/>
+									<mx:Button label="Send" click="debugSentSend();"/>
+								</mx:HBox>							
+								<mx:TextArea height="100%" width="100%" id="debug_sent"/>
+							</mx:VBox>
+							<mx:VBox height="66%" width="100%">
+								<mx:FormHeading label="Received"/>
+								<mx:TextArea height="100%" width="100%" editable="false" id="debug_received"/>
+							</mx:VBox>
+                        </mx:VDividedBox>
+                    </mx:HBox>
+                </mx:Panel>
+            </mx:AddChild>
+            <mx:SetStyle target="{statusBar}" name="fontStyle" value="normal"/>
+            <mx:SetStyle target="{statusBar}" name="fontSize" value="11"/>
+        </mx:State>
+        <mx:State name="about" basedOn="App">
+            <mx:AddChild position="lastChild">
+                <mx:Panel layout="absolute" title="About" verticalCenter="-22" horizontalCenter="0" width="450" height="456">
+                    <mx:Form top="35" left="5" right="5" bottom="10">
+						<mx:FormHeading label="Development Team" width="100%"/>
+						<mx:FormItem label="Creators" width="100%" height="148">
+							<mx:TextArea width="100%" text="David Fullmer david.fullmer@mail.gatech.edu&#xd;Curtis Iwata ciwata@asdl.gatech.edu&#xd;Matthew Daskilewicz mdaskilewicz@asdl.gatech.edu&#xd;Dane Freeman dane.freeman@asdl.gatech.edu&#xd;James Arruda jarruda@asdl.gatech.edu&#xd;Joseph Iacobucci jiacobucci@asdl.gatech.edu&#xd;John Salmon jsalmon@asdl.gatech.edu&#xd;Olivia Pinon opinon@asdl.gatech.edu" height="100%" editable="false"/>
+						</mx:FormItem>
+						<mx:FormHeading label="Framework" width="100%"/>
+						<mx:FormItem label="Description" width="100%" height="80">
+							<mx:TextArea width="100%" text="The ECHO framework is part of a computer infrastructure project designed to enhance the efficiency of interdisciplinary design teams working in a collaboration environments." height="80" editable="false"/>
+						</mx:FormItem>
+						<mx:FormItem label="Version" height="23">
+							<mx:TextArea text="0.1" editable="false" height="23"/>
+						</mx:FormItem>
+						<mx:FormItem label="Build" height="23">
+							<mx:TextArea text="2345345675675" editable="false" height="23"/>
+						</mx:FormItem>
+                    </mx:Form>
+                </mx:Panel>
+            </mx:AddChild>
+        </mx:State>
+    </mx:states>
+
+    <mx:transitions>
+
+	<!-- Define the transition from the base state to the App state.-->
+        <mx:Transition id="toApp" fromState="*" toState="App">
+            <mx:Sequence targets="{[image1]}">
+            	<mx:Move />
+            </mx:Sequence>
+        </mx:Transition>
+	</mx:transitions>
+
+    <!-- Define a Panel container that defines the login form.-->
+    <mx:Image source="{this.iris}" id="image1"/>
+    <mx:Spacer height="10%" width="10%" id="spacer2"/>
+    <mx:Panel title="Login" id="loginPanel" 
+        horizontalScrollPolicy="off" verticalScrollPolicy="off"
+        paddingTop="10" paddingLeft="10" paddingRight="10" paddingBottom="10" horizontalAlign="center" verticalAlign="bottom" borderColor="#E2E2E2" fontWeight="normal" fontStyle="normal" fontSize="12" creationComplete="{this.currentState='';}" layout="vertical" height="200">
+        
+        <mx:Text width="100%" color="#FFFFFF"
+            id="text2" fontSize="10" fontWeight="bold">
+            <mx:text><![CDATA[Welcome to Echo
+A Collaborative Data-Fusion Environment]]></mx:text>
+        </mx:Text>
+        
+        <mx:Form id="loginForm" height="103" y="75" borderColor="#000000">
+            <mx:FormItem label="Session Name:">
+                <mx:TextInput id="user_name" creationComplete="{this.user_name.setFocus()}"/>
+            </mx:FormItem>
+            <mx:FormItem label="Password:">
+                <mx:TextInput displayAsPassword="true" id="user_password" enter="{this.loginOnEnter();}"/>
+            </mx:FormItem>
+        </mx:Form>
+		
+        <mx:ControlBar>
+            <mx:Spacer width="100%" id="spacer1"/>
+            <mx:Button label="Login" id="loginButton" click="loginOnEnter()"/>
+        </mx:ControlBar>
+    </mx:Panel>
+</mx:Application>

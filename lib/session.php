@@ -35,7 +35,7 @@
 			}
 			else return false;
 		}
-		
+			
 		public function createSession($name='', $password='', $expiration='', $description=''){	
 			
 			if($name == '') $n = $this->name;

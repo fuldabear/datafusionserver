@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical" width="100%" height="100%">
+		<mx:Canvas label="Dash Builder" width="100%" height="100%">
+			<mx:HBox x="0" y="0" width="100%" height="100%">
+					<mx:Panel width="50%" height="100%" layout="absolute" title="Outline">
+							<mx:Tree x="0" y="0" width="100%" height="100%"></mx:Tree>
+							<mx:ControlBar>
+									<mx:HBox width="100%" height="100%">
+											<mx:Spacer height="100%" width="100%"/>
+											<mx:PopUpButton x="106.5" y="487" label="Add"/>
+											<mx:Button label="Remove"/>
+									</mx:HBox>
+							</mx:ControlBar>
+					</mx:Panel>
+					<mx:VBox width="100%" height="100%">
+						<mx:Panel width="100%" height="100%" layout="absolute" title="Dash Preview">
+							<mx:ModuleLoader x="0" y="0" width="100%" height="100%">
+							</mx:ModuleLoader>
+						</mx:Panel>
+						<mx:Panel width="100%" height="50%" layout="absolute" title="Properties">
+							<mx:Form x="0" y="0" width="100%" height="100%">
+							</mx:Form>
+							<mx:ControlBar>
+								<mx:HBox width="100%" height="100%">
+									<mx:Spacer width="100%"/>
+									<mx:Button label="Apply"/>
+								</mx:HBox>
+							</mx:ControlBar>
+						</mx:Panel>
+					</mx:VBox>
+				</mx:HBox>
+		</mx:Canvas>	
+</mx:Module>

@@ -1,0 +1,77 @@
+<!-- saved from url=(0014)about:internet -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>CIARelationBrowserApp.as</title>
+<link rel="stylesheet" type="text/css" href="../../../SourceStyles.css"/>
+</head>
+
+<body><pre>#<span class="ActionScriptReserved">include</span> <span class="ActionScriptString">"../as/der-mo.net/relationBrowser/RelationBrowserApp.as"</span>
+#<span class="ActionScriptReserved">include</span> <span class="ActionScriptString">"NodeClasses.as"</span>
+#<span class="ActionScriptReserved">include</span> <span class="ActionScriptString">"RelationClasses.as"</span>
+
+<span class="ActionScriptDefault_Text">GraphView</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">prototype</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">defineLayoutStrategy</span> <span class="ActionScriptOperator">=</span><span class="ActionScriptfunction">function</span> <span class="ActionScriptBracket/Brace">(</span><span class="ActionScriptBracket/Brace">)</span><span class="ActionScriptBracket/Brace">{</span>
+    <span class="ActionScriptComment">// this function is used to define the way the layout of the nodes is calculated
+</span>    <span class="ActionScriptComment">// you can overwrite it for your custom implementations
+</span>    
+    <span class="ActionScriptComment">// DEFAULT SETTING -------------------------------------
+</span>    
+    <span class="ActionScriptComment">// PARAMETERS
+</span>    
+    <span class="ActionScriptComment">// maximum number of total nodes displayed, 
+</span>    <span class="ActionScriptComment">// however level 1 connected nodes are ALWAYS displayed
+</span>    <span class="ActionScriptComment">// regardless of max. number
+</span>    <span class="ActionScriptReserved">this</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">maxNodes</span><span class="ActionScriptOperator">=</span>15;
+    
+    <span class="ActionScriptComment">// how deep shall we look for connected nodes
+</span>    <span class="ActionScriptReserved">this</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">connectionDepth</span><span class="ActionScriptOperator">=</span>1;
+
+    <span class="ActionScriptComment">// shall only relations to center node or all relations be displayed?
+</span>    <span class="ActionScriptReserved">this</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">showAllRelations</span><span class="ActionScriptOperator">=</span><span class="ActionScriptReserved">false</span>;
+
+    <span class="ActionScriptComment">// classical radial layout  
+</span>    <span class="ActionScriptReserved">this</span><span class="ActionScriptOperator">.</span><span class="ActionScriptDefault_Text">layoutManagerClassName</span><span class="ActionScriptOperator">=</span><span class="ActionScriptString">"RadialLayoutManager"</span>;
+    
+    <span class="ActionScriptComment">// iterative springs and repulsion layout
+</span>    <span class="ActionScriptComment">// this.layoutManagerClassName="SpringsLayoutManager";
+</span>    
+    <span class="ActionScriptComment">// first springs layout, then radial based on the calculated positions
+</span>    <span class="ActionScriptComment">// this.layoutManagerClassName="CombinedLayoutManager";
+</span>    
+    <span class="ActionScriptComment">// END DEFAULT SETTING ---------------------------------    
+</span>
+<span class="ActionScriptComment">/*
+    
+    // ADDITIONAL SETTINGS for spring based layout ---------
+
+    this.layoutManagerParams={};
+    
+    // optimal distance for connected nodes
+    this.layoutManagerParams.optimalDistance=150;
+
+    // optimal distance to center
+    this.layoutManagerParams.bestCenterDistance=200;
+
+    // strength of relation-based spring force 
+    this.layoutManagerParams.attractionStrength=50;
+
+    // strength of repulsion
+    this.layoutManagerParams.repulsionStrength=20;
+    
+    // relative speed decrease per frame 
+    this.layoutManagerParams.friction=.5;
+
+    // maximum speed per frame (pixels)
+    this.layoutManagerParams.maxSpeed=20;
+
+    // duration on frames
+    this.layoutManagerParams.frameDuration=85;
+
+    // motion smooting: 0 (no smoothing) to 1 (no motion)
+    // to avoid jerky movement in very connected graphs
+    this.layoutManagerParams.motionSmoothing=.2;
+*/</span>
+    
+<span class="ActionScriptBracket/Brace">}</span>;</pre></body>
+</html>
