@@ -28,7 +28,11 @@
 			if($longPoll == null) $longPoll = $this->longPoll;
 			
 			//test for multiple variables
+			$n_is_array = false;
+			
 			if(json_decode(str_replace("'",'"',$n)) != null){
+			
+				$n_is_array = true;
 			
 				$n = json_decode(str_replace("'",'"',$n));
 			
@@ -48,10 +52,11 @@
 			}
 			
 			//longpoll
-			if($longPoll == true && $v != null && $v != ''){
+			if($longPoll == "true" && $v != null && $v != ''){
 			
-				if(json_decode(str_replace("'",'"',$v)) != null){
-				
+			$v_is_array = false;
+			
+				if(json_decode(str_replace("'",'"',$v)) != null && $n_is_array){
 					$v_is_array = true;
 					$v = json_decode(str_replace("'",'"',$v));
 					$len_v = count($v);

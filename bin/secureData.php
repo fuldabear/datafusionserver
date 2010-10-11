@@ -10,6 +10,11 @@
 	require_once("./lib/datastore.php");
 	require_once("./lib/spyc.php");
 	
+	/*$myFile = "input.txt";
+	$fh = fopen($myFile, 'w') or die("can't open file");
+	fwrite($fh, var_dump($_GET));
+	fclose($fh);*/
+	
 	$db = new Database($db_hostname="localhost",$db_username="root",$db_password="doc",$db_database="mydb");
 	
 	if(!isset($_GET['user']) && !isset($_GET['password'])) echo 'Authorization Failed';
@@ -165,7 +170,8 @@
 					}
 					else
 					{
-						echo $y->YAMLDump($o,4,400);
+						if(is_array($o)) echo $y->YAMLDump($o[0],4,400);
+						else echo $y->YAMLDump($o,4,400);
 					}
 				}
 			}
@@ -181,7 +187,8 @@
 				}
 				else
 				{
-					echo $y->YAMLDump($o,4,400);
+					if(is_array($o)) echo $y->YAMLDump($o[0],4,400);
+					else echo $y->YAMLDump($o,4,400);
 				}
 			}
 		
