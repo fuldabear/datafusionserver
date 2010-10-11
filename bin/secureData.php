@@ -33,7 +33,9 @@
 						$ds = new Datastore($db);
 			
 						if($mode == "read"){
-							$ds->name = $_GET['name'];						
+							if(isset($_GET['name'])) $ds->name = $_GET['name'];
+							if(isset($_GET['value'])) $ds->value = $_GET['value'];
+							if(isset($_GET['longPoll'])) $ds->longPoll = $_GET['longPoll'];					
 							$o = $ds->read();
 						} 
 						elseif($mode == "write"){
