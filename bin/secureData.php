@@ -7,6 +7,7 @@
 	require_once("./lib/database.php");
 	require_once("./lib/session.php");
 	require_once("./lib/ldap.php");
+	require_once("./lib/json2obj.php");
 	require_once("./lib/datastore.php");
 	require_once("./lib/spyc.php");
 	
@@ -36,6 +37,7 @@
 					{
 						$mode = $_GET['mode'];
 						$ds = new Datastore($db);
+						$ds->session = $_GET['user'];
 			
 						if($mode == "read"){
 							if(isset($_GET['name'])) $ds->name = $_GET['name'];

@@ -25,7 +25,7 @@
 			//var_dump($results);
 			if($results->numOfRows != 0) return $results;
 			
-			// So the session does not exist let's check the ldap
+			// So the session does not exist. let's check the ldap
 			if($this->ldap->check()){
 				
 				// So ldap is good let's create a session

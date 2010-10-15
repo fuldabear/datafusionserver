@@ -67,6 +67,9 @@
 				// check for change
 				$c = false;
 				while($c != true){
+					// get all the id's
+					
+					// get all the variables by id
 					$results = $this->db->sqlQuery("select name, value, lastUpdated, description, units from variable where $s");
 					if($results->numOfRows != 0){
 						for($i = 0; $i < $results->numOfRows; $i++){
@@ -124,11 +127,7 @@
 			}
 			return $results;
 		}
-		
-		public function rw(){
-		
-		}
-		
+	
 		public function rename($vn=null,$nn=null,$sn=null){
 			
 			if($vn == null) $vn = $this->name;
@@ -151,7 +150,12 @@
 	
 		public function listVaraibles(){
 			// enforce links to sessions
-			$results = $this->db->sqlQuery("select name, value, lastUpdated, description, units from variable");
+			$j = new json2obj();
+			$j->result = $this->getVariableId(true);
+			$id = $j->orString('idvariable');
+			var_dump($id);
+			if($id == false) return 'Session has no variables';
+			$results = $this->db->sqlQuery("select name, value, lastUpdated, description, units from variable where $id");
 			if($results->numOfRows != 0){
 				for($i = 0; $i < $results->numOfRows; $i++){
 					$results->result[$i]['lastUpdated'] = date('m/d/Y h:i:s a',$results->result[$i]['lastUpdated']);
@@ -160,7 +164,7 @@
 			return $results;
 		}
 		
-		public function writeValue($n=null,$v=null){
+		private function writeValue($n=null,$v=null){
 			//create links to sessions
 			
 			if($n == null) $n = $this->name;
@@ -179,6 +183,50 @@
 				//$result[] = clone $this->db->sqlQuery("insert detailVariableSession set idvariable='$vid', idsession='$sid', rw='1'");
 			}
 			return $result;
+		}
+		private function getVariableId($n=null,$sn=null){
+				if($n == null) $n = $this->name;
+				if($sn == null) $sn = $this->session;
+				$j = new json2obj($n);
+				if($n == true){
+					$results = $this->db->sqlQuery("select detailVariableSession.idvariable from detailVariableSession inner join variable on variable.idvariable = detailVariableSession.idvariable inner join session on session.idsession = detailVariableSession.idsession where session.name='$sn'");
+				}
+				elseif($j->result != false){
+					$n = $j->andString('variable.name');
+					$results = $this->db->sqlQuery("select detailVariableSession.idvariable from detailVariableSession inner join variable on variable.idvariable = detailVariableSession.idvariable inner join session on session.idsession = detailVariableSession.idsession where session.name='$sn' and $n");
+				}
+				else{
+					$results = $this->db->sqlQuery("select detailVariableSession.idvariable from detailVariableSession inner join variable on variable.idvariable = detailVariableSession.idvariable inner join session on session.idsession = detailVariableSession.idsession where session.name='$sn' and variable.name='$n'");
+				}
+				if($results->numOfRows > 0){
+					for($i = 0; $i < $results->numOfRows; $i++){
+							$id[$i] = $results->result[$i]['idvariable'];
+					}
+					return $id;
+				}
+				return false;
+		}
+		
+		private function getWritableVariableId(){
+				if($n == null) $n = $this->name;
+				if($sn == null) $sn = $this->session;
+				$j = new json2obj($n);
+				if($j->result != false){
+					$n = $j->andString('variable.name');
+					$results = $this->db->sqlQuery("select detailVariableSession.idvariable from detailVariableSession inner join variable on variable.idvariable = detailVariableSession.idvariable inner join session on session.idsession = detailVariableSession.idsession where session.name='$sn' and detailVariableSession.rw='1' and $n");
+				}
+				else{
+					$results = $this->db->sqlQuery("select detailVariableSession.idvariable from detailVariableSession inner join variable on variable.idvariable = detailVariableSession.idvariable inner join session on session.idsession = detailVariableSession.idsession where session.name='$sn' and detailVariableSession.rw='1' and variable.name='$n'");
+				}
+				for($i; $i < $results->numOfRows; $i++){
+						$id[] = $results->result[$i]['id'];
+				}
+				return $id;
+		}
+		
+		
+		private function getFunctionId(){
+		
 		}
 	}
 ?>
