@@ -2,7 +2,7 @@
 	header("Cache-Control: no-cache, must-revalidate");
 	header("Content-Type: text/plain");
 
-	ini_set(display_errors, true);
+	ini_set('display_errors', true);
 
 	require_once("./lib/database.php");
 	require_once("./lib/session.php");
