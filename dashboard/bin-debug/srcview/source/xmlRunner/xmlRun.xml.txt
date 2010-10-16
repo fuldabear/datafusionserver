@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<login>
-	<user_name>david</user_name>
-	<user_password>brennan</user_password>
-</login>
- 
