@@ -153,7 +153,6 @@
 			$j = new json2obj();
 			$j->result = $this->getVariableId(true);
 			$id = $j->orString('idvariable');
-			var_dump($id);
 			if($id == false) return 'Session has no variables';
 			$results = $this->db->sqlQuery("select name, value, lastUpdated, description, units from variable where $id");
 			if($results->numOfRows != 0){
@@ -170,11 +169,14 @@
 			if($n == null) $n = $this->name;
 			if($v == null) $v = $this->value;
 			
+			$id = $this->getWritableVariableId($n,$this->session);
+			var_dump($id);
+			
 			$t = time();
 			
 			$unique = $this->db->sqlQuery("select name from variable where name='$n'");
-			if ($unique->numOfRows!=0){ //update existing variable
-				$query="update variable set value='$v', lastUpdated='$t' where name='$n'";
+			if ($id != false){ //update existing variable
+				$query="update variable set value='$v', lastUpdated='$t' where idvariable='$id'";
 				$result=$this->db->sqlQuery($query);
 			}else { //make new variable
 				$result=$this->db->sqlQuery("insert variable set name='$n', value='$v', lastUpdated='$t'");
@@ -207,7 +209,7 @@
 				return false;
 		}
 		
-		private function getWritableVariableId(){
+		private function getWritableVariableId($n=null,$sn=null){
 				if($n == null) $n = $this->name;
 				if($sn == null) $sn = $this->session;
 				$j = new json2obj($n);
@@ -218,10 +220,13 @@
 				else{
 					$results = $this->db->sqlQuery("select detailVariableSession.idvariable from detailVariableSession inner join variable on variable.idvariable = detailVariableSession.idvariable inner join session on session.idsession = detailVariableSession.idsession where session.name='$sn' and detailVariableSession.rw='1' and variable.name='$n'");
 				}
-				for($i; $i < $results->numOfRows; $i++){
-						$id[] = $results->result[$i]['id'];
+				if($results->numOfRows > 0){
+					for($i = 0; $i < $results->numOfRows; $i++){
+							$id[$i] = $results->result[$i]['idvariable'];
+					}
+					return $id;
 				}
-				return $id;
+				return false;
 		}
 		
 		
