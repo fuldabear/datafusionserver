@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical" width="296" height="76" title="Loading" horizontalAlign="center" verticalAlign="middle">
-	<mx:ProgressBar x="34" y="10" labelPlacement="center" indeterminate="true" label="Loading Please Wait..." fontSize="12" fontWeight="bold" id="bar"/>
-	
-</mx:Panel>
