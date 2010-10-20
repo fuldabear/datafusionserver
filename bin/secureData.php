@@ -16,7 +16,7 @@
 	fwrite($fh, var_dump($_GET));
 	fclose($fh);*/
 	
-	$db = new Database($db_hostname="localhost",$db_username="root",$db_password="doc",$db_database="mydb");
+	$db = new Database($db_hostname="localhost",$db_username="root",$db_password="doc",$db_database="dev");
 	
 	if(!isset($_GET['user']) && !isset($_GET['password'])) echo 'Authorization Failed';
 	else
@@ -25,7 +25,6 @@
 		$session = new Session($db, $_GET['user'],$_GET['password'], $ldap);
 	
 		$userSession = $session->check();
-	
 		if($userSession != false)
 		{
 			if(isset($_GET['command']))
@@ -46,8 +45,9 @@
 							$o = $ds->read();
 						} 
 						elseif($mode == "write"){
-							$ds->name = $_GET['name'];
-							$ds->value = $_GET['value'];
+							if(isset($_GET['name'])) $ds->name = $_GET['name'];
+							if(isset($_GET['value'])) $ds->value = $_GET['value'];
+							if(isset($_GET['key'])) $ds->key = $_GET['key'];
 							$o = $ds->write();
 						} 
 						elseif($mode == "list"){
@@ -167,13 +167,13 @@
 					{
 						for($i = 0; $i < count($o); $i++)
 						{
-							echo $y->YAMLDump($o[$i],4,400);
+							echo $y->YAMLDump($o[$i],4,900);
 						}
 					}
 					else
 					{
-						if(is_array($o)) echo $y->YAMLDump($o[0],4,400);
-						else echo $y->YAMLDump($o,4,400);
+						if(is_array($o)) echo $y->YAMLDump($o[0],4,900);
+						else echo $y->YAMLDump($o,4,1000);
 					}
 				}
 			}
@@ -184,13 +184,13 @@
 				{
 					for($i = 0; $i < count($o); $i++)
 					{
-						echo $y->YAMLDump($o[$i],4,400);
+						echo $y->YAMLDump($o[$i],4,900);
 					}
 				}
 				else
 				{
-					if(is_array($o)) echo $y->YAMLDump($o[0],4,400);
-					else echo $y->YAMLDump($o,4,400);
+					if(is_array($o)) echo $y->YAMLDump($o[0],4,900);
+					else echo $y->YAMLDump($o,4,900);
 				}
 			}
 		

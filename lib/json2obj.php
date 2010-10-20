@@ -12,10 +12,13 @@
 			}
 		}
 		
+		// This function test the json code to ensure it is an array and returns the array
+		// And updates the length
 		public function decode($in=null){
 			if($in == null) $in = $this->json;
 			if(!json_decode(str_replace("'",'"',$in)) || is_numeric(json_decode(str_replace("'",'"',$in))) || $in == null) return false;
 			$this->result = json_decode(str_replace("'",'"',$in));
+			if(!is_array($this->result)) return false;
 			$this->length = count($this->result);
 			return $this->result;
 		}

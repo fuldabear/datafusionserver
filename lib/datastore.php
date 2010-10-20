@@ -8,8 +8,9 @@
 		var $longPoll;
 		var $session;
 		var $newname;
+		var $key;
 			
-		function Datastore($d=null,$n=null,$v=null,$s=null,$nn=null,$l=false){
+		function Datastore($d=null,$n=null,$k=null,$v=null,$s=null,$nn=null,$l=true){
 		
 			$this->name = $n;
 			$this->value = $v;
@@ -18,6 +19,7 @@
 			$this->longPoll = $l;
 			$this->session = $s;
 			$this->session = $nn;
+			$this->key = $k;
 		}	
 	
 		public function read($n=null, $v=null, $longPoll=null){
@@ -100,29 +102,36 @@
 			}
 		}
 		
-		public function write($n=null,$v=null){
+		public function write($n=null,$k=null,$v=null){
 		
 			if($n == null) $n = $this->name;
+			if($k == null) $k = $this->key;
 			if($v == null) $v = $this->value;
 			
-			if(json_decode(str_replace("'",'"',$n)) == null)
+			$nj = new json2obj($n);
+			$kj = new json2obj($k);
+			$vj = new json2obj($v);
+			
+			if(($k == null || $k == '') && isset($_GET['user'])){
+				$k = $_GET['user'];
+				if($vj->length != null && $kj->length == null){
+					$kj->length = $vj->length;
+					for($i = 0; $i < $vj->length; $i++){
+						$kj->result[] = $_GET['user'];
+					}
+				}
+			}
+			if($nj->result == false && $kj->result == false && $vj->result == false)
 			{
-				$results = $this->writeValue($this->name,$this->value);
+				$results = $this->writeValue($n,$k,$v);
 			}
 			else
 			{
-				$n = json_decode(str_replace("'",'"',$n));
-				$v = json_decode(str_replace("'",'"',$v));
-				
-				$len_n = count($n);
-				$len_v = count($v);
-			
-				if($len_n != $len_v) return 'mismatched name and value pairs';
-				if($len_n <= 0) return 'no name value pairs';
-				
-				for($i = 0; $i < $len_n; $i++)
+				if($nj->length != $kj->length || $nj->length != $vj->length) return 'mismatched name, key, and value pairs';
+				if($nj->length <= 0) return 'no name, key, and value pairs';
+				for($i = 0; $i < $nj->length; $i++)
 				{
-					$results[$i] = clone $this->writeValue($n[$i],$v[$i]);
+					$results[$i] = $this->writeValue($nj->result[$i],$kj->result[$i],$vj->result[$i]);
 				}
 			}
 			return $results;
@@ -163,28 +172,42 @@
 			return $results;
 		}
 		
-		private function writeValue($n=null,$v=null){
-			//create links to sessions
-			
+		private function writeValue($n=null,$k=null,$v=null){
 			if($n == null) $n = $this->name;
 			if($v == null) $v = $this->value;
-			
-			$id = $this->getWritableVariableId($n,$this->session);
-			var_dump($id);
-			
+			if($k == null) $k = $this->key;
+			$o = new DbQueryMultipleInserts();
+			$variableId = $this->getWritableVariableId($n,$this->session); // there will only be one id or false
+			$sessionId = $this->getSessionId($this->session); // there will only be one id or false
 			$t = time();
-			
-			$unique = $this->db->sqlQuery("select name from variable where name='$n'");
-			if ($id != false){ //update existing variable
-				$query="update variable set value='$v', lastUpdated='$t' where idvariable='$id'";
-				$result=$this->db->sqlQuery($query);
+			if ($variableId[0] != false){ //update existing variable
+				$valueId = $this->getValueId($variableId[0],$k); // there will only be one or false
+				if($valueId != false){ //update existing key value
+					$result=$this->db->sqlQuery("insert history set value='$v', time='$t', idvalue='$valueId'",false);
+					$o->update($result);
+					$result=$this->db->sqlQuery("update variable set lastUpdated='$t' where idvariable='$variableId[0]'");
+					$o->update($result);
+				}
+				else{ //make new key value
+					$result=$this->db->sqlQuery("insert value set idvariable='$variableId[0]', name='$k', defaultValue='0'",false);
+					$o->update($result);
+					$result=$this->db->sqlQuery("insert history set value='$v', time='$t', idvalue=last_insert_id()",false);
+					$o->update($result);
+					$result=$this->db->sqlQuery("update variable set lastUpdated='$t' where idvariable='$variableId[0]'");
+					$o->update($result);
+				}
 			}else { //make new variable
-				$result=$this->db->sqlQuery("insert variable set name='$n', value='$v', lastUpdated='$t'");
-				
-				//$vid = $this->db->sqlQuery("select idvariable from variable where name='$n'");
-				//$result[] = clone $this->db->sqlQuery("insert detailVariableSession set idvariable='$vid', idsession='$sid', rw='1'");
+				$result=$this->db->sqlQuery("insert variable set name='$n', lastUpdated='$t'",false);
+				$o->update($result);
+				$result=$this->db->sqlQuery("insert detailVariableSession set idvariable=last_insert_id(), idsession='$sessionId', rw='1'",false);
+				$o->update($result);
+				$variableId = $this->getWritableVariableId($n,$this->session); // there will only be one id or false
+				$result=$this->db->sqlQuery("insert value set idvariable='$variableId[0]', name='$k', defaultValue='0'",false);
+				$o->update($result);
+				$result=$this->db->sqlQuery("insert history set idvalue=last_insert_id(), value='$v', time='$t'");
+				$o->update($result);
 			}
-			return $result;
+			return $o;
 		}
 		private function getVariableId($n=null,$sn=null){
 				if($n == null) $n = $this->name;
@@ -229,6 +252,29 @@
 				return false;
 		}
 		
+		private function getSessionId($sn=null){
+			if($sn == null) $sn = $this->session;
+			$result = $this->db->sqlQuery("select idsession from session where name='$sn' limit 1");
+			if($result->numOfRows != 0) return $result->result[0]['idsession'];
+			else return false;
+		}
+		
+		private function getValueId($vid=null,$k=null){
+			if($vid == null) return false;
+			if($k == null) $k = $this->key;
+			if($k != null){
+				$result = $this->db->sqlQuery("select idvalue from value where name='$k' and idvariable='$vid' limit 1");
+				if($result->numOfRows != 0) return $result->result[0]['idvalue'];
+				else return false;
+			}
+			else{
+				$result = $this->db->sqlQuery("select idvalue from value where idvariable='$vid' and defaultValue='1' limit 1");
+				if($result->numOfRows != 0) return $result->result[0]['idvalue'];
+				$result = $this->db->sqlQuery("select idvalue from value where idvariable='$vid' limit 1");
+				if($result->numOfRows != 0) return $result->result[0]['idvalue'];
+				else return false;
+			}
+		}
 		
 		private function getFunctionId(){
 		

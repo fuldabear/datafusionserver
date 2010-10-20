@@ -99,7 +99,7 @@ class Spyc {
   * @var mixed
   */
   public $_nodeId;
-
+  
 /**
  * Load a valid YAML string to Spyc.
  * @param string $input
@@ -182,11 +182,24 @@ class Spyc {
      * @param int $indent Pass in false to use the default, which is 2
      * @param int $wordwrap Pass in 0 for no wordwrap, false for default (40)
      */
-  public static function YAMLDump($array,$indent = false,$wordwrap = false) {
+  public static function YAMLDump($mixed,$indent = false,$wordwrap = false) {
     $spyc = new Spyc;
+	$array = $spyc->object_to_array($mixed);
     return $spyc->dump($array,$indent,$wordwrap);
   }
 
+  public function object_to_array($mixed) {
+    if(is_object($mixed)) $mixed = (array) $mixed;
+    if(is_array($mixed)) {
+        $new = array();
+        foreach($mixed as $key => $val) {
+            $key = preg_replace("/^\\0(.*)\\0/","",$key);
+            $new[$key] = $this->object_to_array($val);
+        }
+    } 
+    else $new = $mixed;
+    return $new;        
+  }
 
   /**
      * Dump PHP array to YAML

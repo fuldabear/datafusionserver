@@ -40,6 +40,27 @@
 		}
 	}
 	
+	class DbQueryMultipleInserts
+	{
+		var $result;
+		var $errors;
+		
+		function DbQueryMultipleInserts()
+		{
+			$this->result = true;
+			$this->errors = null;
+		}
+		
+		public function update($r=null){
+		if($r != null){
+			if($r->status == 'error'){
+					$this->result = 'error';
+					$this->errors[] = clone $r;
+				}
+			}
+		}
+	}
+	
 	class Database
 	{
 		var $result;
@@ -68,63 +89,74 @@
 			@mysql_close();
 		}
 		
-		public function sqlQuery($query)
+		public function sqlQuery($query='',$autoDisconnect=true)
 		{
+			$query = split(";",$query);
+			$numOfQueries = count($query);
+			if($numOfQueries > 1){
+				var_dump($query);
+				//return 'cool';
+			}
 			$this->result->status = 'error';
 			$this->result->error = 'none';
-			$this->result->query = $query;
+			
 			if ($this->connect() != 'ok')
 			{
 				$this->result->error = mysql_error();
 				return $this->result;
 			}
-			$resource = mysql_query($query);
-			
-			if (!$resource) {
-				$this->result->error = 'Query failed: ' . mysql_error();
-				//if($this->logOp == false) $this->logger->log('',$query,$this->result->error);
+			for($i = 0; $i < $numOfQueries; $i++){	
+				$this->result->query = $query[$i];
+				$resource = mysql_query($query[$i]);
 				
-			}
-		
-			$this->result->numOfRows = @mysql_num_rows($resource);
-			if ($this->result->numOfRows == false) $this->result->numOfRows = 0;
-			$this->result->numOfRowsAffected = @mysql_affected_rows();
-			if ($this->result->numOfRowsAffected == false || $this->result->numOfRowsAffected == -1) $this->result->numOfRowsAffected = 0;
-			
-			$i = 0;
-			while ($i < @mysql_num_fields($resource))
-				{
-			    $meta = mysql_fetch_field($resource, $i);
-			    $columnNames[] = $meta->name;//place col name into array
-			    $i++;
-			}
-			@$this->result->columnNames = $columnNames;
-			$this->result->numOfColumns = $i;
-			if ($resource == false)
-			{
-				$this->result->status = 'error';
-				$this->result->result = false;
-			}
-			else
-			{
-				$row = null;
-				while ($line = @mysql_fetch_array($resource, MYSQL_ASSOC))
-				{
-					$row[] = $line;
+				if (!$resource) {
+					$this->result->error = 'Query failed: ' . mysql_error();
+					//if($this->logOp == false) $this->logger->log('',$query,$this->result->error);
+					
 				}
-				if($row != null)
+			
+				$this->result->numOfRows = @mysql_num_rows($resource);
+				if ($this->result->numOfRows == false) $this->result->numOfRows = 0;
+				$this->result->numOfRowsAffected = @mysql_affected_rows();
+				if ($this->result->numOfRowsAffected == false || $this->result->numOfRowsAffected == -1) $this->result->numOfRowsAffected = 0;
+				
+				$i = 0;
+				while ($i < @mysql_num_fields($resource))
+					{
+					$meta = mysql_fetch_field($resource, $i);
+					$columnNames[] = $meta->name;//place col name into array
+					$i++;
+				}
+				@$this->result->columnNames = $columnNames;
+				$this->result->numOfColumns = $i;
+				if ($resource == false)
 				{
-					$this->result->status = 'ok';
-					$this->result->result = $row;
+					$this->result->status = 'error';
+					$this->result->result = false;
 				}
 				else
 				{
-					$this->result->status = 'ok';
-					$this->result->result = true;
+					$row = null;
+					while ($line = @mysql_fetch_array($resource, MYSQL_ASSOC))
+					{
+						$row[] = $line;
+					}
+					if($row != null)
+					{
+						$this->result->status = 'ok';
+						$this->result->result = $row;
+					}
+					else
+					{
+						$this->result->status = 'ok';
+						$this->result->result = true;
+					}
 				}
+				$o[] = $this->result;
 			}
-			$this->disconnect();
-			return $this->result;
+			if($autoDisconnect == true) $this->disconnect();
+			if($numOfQueries == 1) return $this->result;
+			else return $o;
 		}
 	}
 ?>
