@@ -92,7 +92,7 @@
 		
 		private function checkExpiration(){
 			$t = time();
-			$results = $this->database->sqlQuery("delete from session where expiration < '$t' AND expiration != 0");
+			$results = $this->database->sqlQuery("delete dev.session, dev.detailVariableSession, dev.variable, dev.value, dev.history from dev.session inner join dev.detailVariableSession on dev.detailVariableSession.idsession=dev.session.idsession inner join dev.variable on dev.variable.idvariable=dev.detailVariableSession.idvariable inner join dev.value on dev.value.idvariable=dev.variable.idvariable inner join dev.history on dev.history.idvalue=dev.value.idvalue where dev.session.expiration < ".$t." and dev.session.expiration != 0");
 			return $results;
 		}
 		

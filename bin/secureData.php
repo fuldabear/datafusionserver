@@ -40,8 +40,11 @@
 			
 						if($mode == "read"){
 							if(isset($_GET['name'])) $ds->name = $_GET['name'];
+							if(isset($_GET['key'])) $ds->key = $_GET['key'];
 							if(isset($_GET['value'])) $ds->value = $_GET['value'];
-							if(isset($_GET['longPoll'])) $ds->longPoll = $_GET['longPoll'];					
+							if(isset($_GET['time'])) $ds->time = $_GET['time'];
+							if(isset($_GET['rollback'])) $ds->rollback = $_GET['rollback'];
+							if(isset($_GET['longPoll'])) $ds->longPoll = $_GET['longPoll'];
 							$o = $ds->read();
 						} 
 						elseif($mode == "write"){

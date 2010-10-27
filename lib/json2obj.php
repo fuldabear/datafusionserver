@@ -8,7 +8,7 @@
 		function json2obj($j=null){
 			if($j != null){
 				$this->json = $j;
-				$this->decode();
+				$this->decode($this->json);
 			}
 		}
 		
