@@ -59,6 +59,11 @@
 				}
 			}
 		}
+		
+		public function logError($l=''){
+			$this->result = 'error';
+			$this->errors[] = $l;
+		}
 	}
 	
 	class Database
@@ -91,6 +96,7 @@
 		
 		public function sqlQuery($query='',$autoDisconnect=true)
 		{
+			$query = str_replace("dev",$this->dbConfig->database,$query); /// convert keyword 'dev' in sql to current database name on server
 			$query = split(";",$query);
 			$numOfQueries = count($query);
 			if($numOfQueries > 1){
@@ -112,8 +118,8 @@
 				if (!$resource) {
 					$this->result->error = 'Query failed: ' . mysql_error();
 					//if($this->logOp == false) $this->logger->log('',$query,$this->result->error);
-					
 				}
+				/////////////////////////////////////////else unset($this->result->query);
 			
 				$this->result->numOfRows = @mysql_num_rows($resource);
 				if ($this->result->numOfRows == false) $this->result->numOfRows = 0;
@@ -157,6 +163,14 @@
 			if($autoDisconnect == true) $this->disconnect();
 			if($numOfQueries == 1) return $this->result;
 			else return $o;
+		}
+		
+		public function deleteOrphanedRecords($dt='',$jt='',$id=''){
+			// dt: table recordes are being delected from
+			// jt: table dt is joined with
+			// id: where column id is null
+			$r = $this->sqlQuery("delete ".$dt." from ".$dt." left join ".$jt." on ".$dt.".".$id."=".$jt.".".$id." where ".$jt.".".$id." is null");
+			return $r;
 		}
 	}
 ?>
